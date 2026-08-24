@@ -1,0 +1,27 @@
+# 预训练权重与训练产物（体积大，运行时自动下载 / 生成）
+*.pt
+*.onnx
+*.engine
+runs/
+
+# 数据（不入库，各自采集）
+raw/
+labeled/
+dataset/
+*.jpg
+*.jpeg
+*.png
+*.heic
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+env/
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store

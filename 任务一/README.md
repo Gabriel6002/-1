@@ -8,8 +8,8 @@
 任务一/
 ├── dataset/              YOLO 格式数据集配置与标注，图片因体积较大未上传
 ├── model/best.pt         本次训练得到的最优模型
-├── program/              数据采集、标注辅助、数据集划分、Jetson 实时检测代码
-├── training_results/     训练曲线、混淆矩阵、验证预测图和训练日志
+├── program/              数据采集、标注检查、数据集划分、Jetson 实时检测代码
+├── training_results/     训练曲线、混淆矩阵、验证预测图和结果日志
 ├── results_video/        Jetson 实测结果视频保存位置
 ├── error_cases/          典型错误案例保存位置
 ├── README.md             本说明

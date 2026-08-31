@@ -32,3 +32,5 @@ env/
 任务一/dataset/images/
 任务一/**/.DS_Store
 任务一/**/*.cache
+任务一/**/__pycache__/
+任务一/**/*.pyc

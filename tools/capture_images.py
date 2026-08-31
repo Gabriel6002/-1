@@ -1,15 +1,3 @@
-#!/usr/bin/env python3
-"""数据采集：从摄像头抓图存到 dataset/raw/<类别名>/。
-
-用法：
-  python3 capture_images.py --class mouse                 # 空格拍一张
-  python3 capture_images.py --class cup --auto --interval 0.5   # 自动连拍
-
-按键：
-  空格  拍一张        a  切换自动连拍       u  撤销上一张
-  q/ESC 退出
-"""
-
 import argparse
 import os
 import time

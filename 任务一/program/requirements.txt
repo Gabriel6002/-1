@@ -1,0 +1,7 @@
+# 核心：YOLOv8 + 推理
+ultralytics>=8.1.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# 人工复核标注工具（可选，也可用 X-AnyLabeling / labelme 等替代）
+# labelImg==1.8.6

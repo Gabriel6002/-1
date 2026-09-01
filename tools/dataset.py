@@ -111,7 +111,7 @@ def main():
 
     yaml_path = os.path.join(args.output, 'data.yaml')
     with open(yaml_path, 'w', encoding='utf-8') as f:
-        f.write('# 由 split_dataset.py 自动生成\n')
+        f.write('# 由 dataset.py 自动生成\n')
         f.write(f'path: {os.path.abspath(args.output)}\n')
         f.write('train: images/train\n')
         f.write('val: images/val\n')

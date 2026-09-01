@@ -24,10 +24,10 @@ cup
 .
 ├── 任务一/                 实验一提交材料
 ├── tools/
-│   ├── capture_images.py   摄像头采集脚本
-│   ├── split_dataset.py    数据集划分脚本
-│   ├── check_labels.py     标注检查脚本
-│   ├── common.py           公共工具函数
+│   ├── camera.py             摄像头采集脚本
+│   ├── dataset.py            数据集划分脚本
+│   ├── labels.py             标注检查脚本
+│   ├── ultralytics.py        公共工具函数
 │   └── jetson_detect_ros2.py Jetson 实时检测与 ROS2 发布脚本
 ├── docs/
 │   ├── 01-采集拍摄指南.md
@@ -41,7 +41,7 @@ cup
 采集图片：
 
 ```bash
-python tools/capture_images.py --class mouse --limit 100 --out raw
+python tools/camera.py --class mouse --limit 100 --out raw
 ```
 
 手动标注：
@@ -53,14 +53,14 @@ labelImg raw
 划分数据集：
 
 ```bash
-python tools/split_dataset.py --input labeled --output yolo_dataset \
+python tools/dataset.py --input labeled --output yolo_dataset \
     --classes mouse keyboard cup --ratio 0.7 0.2 0.1
 ```
 
 检查标注：
 
 ```bash
-python tools/check_labels.py --data yolo_dataset/data.yaml --show 20
+python tools/labels.py --data yolo_dataset/data.yaml --show 20
 ```
 
 训练模型：

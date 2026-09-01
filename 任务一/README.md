@@ -8,7 +8,7 @@
 任务一/
 ├── dataset/              YOLO 格式数据集配置与标注，图片因体积较大未上传
 ├── model/best.pt         本次训练得到的最优模型
-├── program/              数据采集、标注检查、数据集划分、Jetson 实时检测代码
+├── program/              标注检查、数据集划分、Jetson 实时检测代码
 ├── training_results/     训练曲线、混淆矩阵、验证预测图和结果日志
 ├── results_video/        Jetson 实测结果视频保存位置
 ├── error_cases/          典型错误案例保存位置
@@ -59,7 +59,7 @@ ros2 topic echo /desk_object_detections
 
 ## 数据集图片说明
 
-本地完整图片数据集位于原训练目录的 `yolo_dataset/images/`。由于图片体积较大，GitHub 仓库中只保留 `data.yaml` 和 `labels/` 标注文件；如需复现实验，将图片按 `data.yaml` 的 train/val/test 结构放回 `dataset/images/` 即可。
+本次实验图片使用手机拍摄后传到电脑整理。本地完整图片数据集位于原训练目录的 `yolo_dataset/images/`。由于图片体积较大，GitHub 仓库中只保留 `data.yaml` 和 `labels/` 标注文件；如需复现实验，将图片按 `data.yaml` 的 train/val/test 结构放回 `dataset/images/` 即可。
 
 ## 待补材料
 

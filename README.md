@@ -24,7 +24,6 @@ cup
 .
 ├── 任务一/                 实验一提交材料
 ├── tools/
-│   ├── camera.py             摄像头采集脚本
 │   ├── dataset.py            数据集划分脚本
 │   ├── labels.py             标注检查脚本
 │   ├── ultralytics.py        公共工具函数
@@ -38,11 +37,7 @@ cup
 
 ## 快速使用
 
-采集图片：
-
-```bash
-python tools/camera.py --class mouse --limit 100 --out raw
-```
+采集图片：使用手机拍摄桌面物体图片，然后传到电脑整理。
 
 手动标注：
 

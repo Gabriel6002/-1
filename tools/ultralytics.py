@@ -1,15 +1,7 @@
-#!/usr/bin/env python3
-"""各脚本共用的小工具。"""
-
 import os
 
-
 def pick_device(requested='auto'):
-    """把 --device 参数解析成 ultralytics 认识的设备字符串。
-
-    'auto' 时按 CUDA > MPS > CPU 的顺序挑，这样同一份代码在
-    Mac(M系列)、有 N 卡的台式机、Jetson 上都不用改参数。
-    """
+  
     if requested and requested != 'auto':
         return requested
 

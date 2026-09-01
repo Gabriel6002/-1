@@ -1,14 +1,3 @@
-#!/usr/bin/env python3
-"""标注质检：查坐标越界、类别越界、空标注、重复框，并抽样可视化。
-
-标注错误是这类实验最常见的翻车点——训练跑通了但精度上不去，八成是标注问题。
-建议每次标完都跑一遍。
-
-用法：
-  python3 check_labels.py --data ../dataset/desk_objects/data.yaml
-  python3 check_labels.py --data ../dataset/desk_objects/data.yaml --show 12
-"""
-
 import argparse
 import os
 from collections import Counter
@@ -21,7 +10,6 @@ PALETTE = [(56, 56, 255), (31, 112, 255), (49, 210, 207), (10, 249, 72),
 
 
 def load_yaml(path):
-    """只解析我们需要的几个字段，避免为一个脚本引入 pyyaml 依赖。"""
     root, names = os.path.dirname(os.path.abspath(path)), {}
     splits, in_names = {}, False
     with open(path, encoding='utf-8') as f:

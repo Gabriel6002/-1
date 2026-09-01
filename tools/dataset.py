@@ -1,17 +1,3 @@
-#!/usr/bin/env python3
-"""把标注好的图片按比例划分为 train/val/test，并生成 data.yaml。
-
-输入目录要求（labelImg / X-AnyLabeling 导出 YOLO 格式后的样子）：
-  <input>/images/*.jpg      图片
-  <input>/labels/*.txt      同名标注文件
-或者图片和 txt 混在同一个目录里也行，脚本会自动配对。
-
-用法：
-  python3 split_dataset.py --input ../dataset/labeled \
-      --output ../dataset/desk_objects --classes mouse cup keyboard \
-      --ratio 0.7 0.2 0.1
-"""
-
 import argparse
 import os
 import random

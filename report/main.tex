@@ -29,14 +29,16 @@
  \fill[Navy] (current page.north west) rectangle ([xshift=1.65cm]current page.south west);
  \fill[PaleBlue] ([xshift=1.65cm]current page.north west) rectangle (current page.south east);
  \fill[white] ([xshift=1.9cm,yshift=-1.4cm]current page.north west) rectangle ([xshift=-1.15cm,yshift=1.25cm]current page.south east);
- \draw[Blue,line width=2pt] ([xshift=3.0cm,yshift=-5.0cm]current page.north west)--([xshift=-2.0cm,yshift=-5.0cm]current page.north east);
+ \fill[Blue] ([xshift=3.0cm,yshift=-4.65cm]current page.north west) rectangle ([xshift=5.05cm,yshift=-4.55cm]current page.north west);
+ \draw[LightRule,line width=0.8pt] ([xshift=5.2cm,yshift=-4.6cm]current page.north west)--([xshift=-2.0cm,yshift=-4.6cm]current page.north east);
  \node[anchor=west,text=Slate,font=\sffamily\bfseries\large] at ([xshift=3.0cm,yshift=-2.3cm]current page.north west){INTEGRATED INTELLIGENT SYSTEMS LABORATORY};
  \node[anchor=east,text=Blue,font=\sffamily\bfseries] at ([xshift=-2.0cm,yshift=-2.3cm]current page.north east){LAB 01};
- \node[anchor=west,text=Navy,font=\sffamily\bfseries\fontsize{27}{34}\selectfont] at ([xshift=3.0cm,yshift=-6.45cm]current page.north west){Object Detection and Recognition};
- \node[anchor=west,text=Slate,font=\sffamily\Large] at ([xshift=3.0cm,yshift=-7.55cm]current page.north west){Dataset Engineering, YOLOv8 Training, and Edge Deployment};
- \node[anchor=west,text=Blue,font=\sffamily\bfseries\Large] at ([xshift=3.0cm,yshift=-10.0cm]current page.north west){Group11};
- \node[anchor=west,text=Navy,font=\sffamily\bfseries\LARGE] at ([xshift=3.0cm,yshift=-11.25cm]current page.north west){Hua Yingjie};
- \node[anchor=west,text=Slate,font=\sffamily\large] at ([xshift=3.0cm,yshift=-12.2cm]current page.north west){Student ID \quad 24020036025};
+ \node[anchor=west,text=Blue,font=\sffamily\bfseries\fontsize{42}{46}\selectfont] at ([xshift=3.0cm,yshift=-6.15cm]current page.north west){EXPERIMENT 1};
+ \node[anchor=west,text=Navy,font=\sffamily\bfseries\fontsize{26}{32}\selectfont] at ([xshift=3.0cm,yshift=-7.55cm]current page.north west){Object Detection and Recognition};
+ \node[anchor=west,text=Slate,font=\sffamily\large] at ([xshift=3.0cm,yshift=-8.55cm]current page.north west){Dataset Engineering · YOLOv8 Training · Edge Deployment};
+ \node[anchor=west,text=Blue,font=\sffamily\bfseries\Large] at ([xshift=3.0cm,yshift=-11.1cm]current page.north west){GROUP 11};
+ \node[anchor=west,text=Navy,font=\sffamily\bfseries\LARGE] at ([xshift=3.0cm,yshift=-12.25cm]current page.north west){Hua Yingjie};
+ \node[anchor=west,text=Slate,font=\sffamily\large] at ([xshift=3.0cm,yshift=-13.15cm]current page.north west){Student ID \quad 24020036025};
  \node[anchor=south east,text=Slate,font=\sffamily\small,align=right] at ([xshift=-2.0cm,yshift=2.0cm]current page.south east){YOLOv8 · Jetson · ROS2\\Experimental Report};
 \end{tikzpicture}\mbox{}
 \end{titlepage}
@@ -71,17 +73,28 @@ Save results and representative errors & Final video and a low-confidence false-
 The workflow consists of data engineering, model training, edge deployment, and error-driven feedback. The Mac performs data cleaning, splitting, training, and evaluation. The Jetson performs camera capture, inference, visualization, logging, and message publication. Misclassified, missed, or low-confidence frames can be returned to the labeling stage for iterative improvement.
 
 \begin{figure}[htbp]\centering
-\begin{tikzpicture}[node distance=1.05cm and 0.8cm,box/.style={rounded corners=3pt,draw=Blue,fill=PaleBlue,minimum width=3.3cm,minimum height=1.05cm,align=center,font=\small\sffamily},deploy/.style={rounded corners=3pt,draw=Navy,fill=Navy,text=white,minimum width=3.3cm,minimum height=1.05cm,align=center,font=\small\sffamily\bfseries},arrow/.style={-{Latex[length=2.7mm]},line width=0.8pt,draw=Slate}]
- \node[box](collect){Data acquisition\\multiple scenes and views};
- \node[box,right=of collect](label){Automatic pre-annotation\\manual review};
- \node[box,right=of label](audit){Quality audit\\group-aware split};
- \node[box,below=of audit](train){YOLOv8n transfer learning\\MPS acceleration};
- \node[deploy,left=of train](jetson){Jetson camera\\real-time detection};
- \node[box,left=of jetson](ros){Visualization\\ROS2 interface};
+\begin{tikzpicture}[
+ stage/.style={rounded corners=6pt,draw=LightRule,line width=0.9pt,fill=white,text width=3.45cm,minimum height=1.32cm,align=left,font=\small\sffamily,inner xsep=10pt},
+ active/.style={stage,draw=Navy,fill=Navy,text=white},
+ badge/.style={circle,fill=Blue,text=white,minimum size=6.5mm,inner sep=0pt,font=\scriptsize\sffamily\bfseries},
+ arrow/.style={-{Latex[length=2.7mm]},line width=1.05pt,draw=Blue},
+ feedback/.style={-{Latex[length=2.5mm]},line width=0.9pt,draw=Slate,dashed}]
+ \node[stage](collect){\textbf{DATA ACQUISITION}\\\footnotesize Self-collected, online, and negative samples};
+ \node[stage,right=0.65cm of collect](label){\textbf{ANNOTATION}\\\footnotesize Model pre-labeling and human review};
+ \node[stage,right=0.65cm of label](audit){\textbf{QUALITY CONTROL}\\\footnotesize Audit, deduplication, and split};
+ \node[active,below=1.0cm of audit](train){\textbf{MODEL TRAINING}\\\footnotesize YOLOv8n transfer learning on MPS};
+ \node[active,left=0.65cm of train](jetson){\textbf{EDGE INFERENCE}\\\footnotesize Jetson camera at 15 FPS};
+ \node[stage,left=0.65cm of jetson](ros){\textbf{SYSTEM OUTPUT}\\\footnotesize Overlays, logs, and ROS2 payload};
+ \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]collect.north west){1};
+ \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]label.north west){2};
+ \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]audit.north west){3};
+ \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]train.north west){4};
+ \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]jetson.north west){5};
+ \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]ros.north west){6};
  \draw[arrow](collect)--(label);\draw[arrow](label)--(audit);\draw[arrow](audit)--(train);\draw[arrow](train)--(jetson);\draw[arrow](jetson)--(ros);
- \draw[arrow,dashed](ros.south)--++(0,-0.6)-|node[pos=0.25,below,font=\footnotesize\sffamily,color=Slate]{error-frame feedback}(collect.south);
+ \draw[feedback](ros.south)--++(0,-0.62)-|node[pos=0.46,below,font=\footnotesize\sffamily\bfseries,color=Slate,fill=white,inner sep=3pt]{ERROR-DRIVEN DATA FEEDBACK}(collect.south);
 \end{tikzpicture}
-\caption{End-to-end workflow from dataset construction to edge deployment}\label{fig:pipeline}
+\caption{Six-stage detection pipeline with deployment feedback to dataset refinement}\label{fig:pipeline}
 \end{figure}
 
 \section{Experimental Environment}

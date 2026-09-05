@@ -30,7 +30,7 @@ cup
 ├── data/                       YOLO 配置与 train/val/test 标签
 ├── models/best.pt              最优训练权重
 ├── results/training/           曲线、混淆矩阵、验证预测与训练日志
-├── report/                     英文 PDF、LaTeX 源文件与文字版说明
+├── report/                     英文 PDF 与 LaTeX 源文件
 ├── docs/
 │   ├── 01-采集拍摄指南.md
 │   ├── 02-标注与数据集制作.md

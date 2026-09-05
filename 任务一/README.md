@@ -1,6 +1,6 @@
 # 实验一：目标检测与识别
 
-本目录为实验一提交材料整理版，包含数据集、训练模型、Jetson 运行程序、训练结果、运行说明和实验报告。
+本目录为实验一提交材料整理版，重点保存可复现代码、数据配置、轻量标签、训练模型、训练结果、运行说明和 LaTeX 实验报告。完整原始图像和结果视频因体积较大保存在本地，不重复上传到 GitHub。
 
 ## 目录结构
 
@@ -10,8 +10,7 @@
 ├── model/best.pt         本次训练得到的最优模型
 ├── program/              标注检查、数据集划分、Jetson 实时检测代码
 ├── training_results/     训练曲线、混淆矩阵、验证预测图和结果日志
-├── results_video/        Jetson 实测结果视频保存位置
-├── error_cases/          典型错误案例保存位置
+├── report/               最终 PDF、LaTeX 源文件和完整 Overleaf 工程包
 ├── README.md             本说明
 └── 实验报告.md
 ```
@@ -53,21 +52,16 @@ ros2 topic echo /desk_object_detections
 
 - 检测类别：`mouse`、`keyboard`、`cup`
 - Jetson 设备：Orin
-- ROS2：Humble
+- ROS2：已完成 `rclpy` 发布程序；实际话题回显需在 Jetson 的 Humble 环境验证
 - Jetson 摄像头：`/dev/video0`、`/dev/video1`
-- 实测速度：30 帧推理耗时 3.716 秒，平均约 8.07 FPS
+- 最终结果视频：1280×720、300 帧、20 秒，画面稳定显示 15 FPS
 
 ## 数据集图片说明
 
-本次实验图片使用手机拍摄后传到电脑整理。本地完整图片数据集位于原训练目录的 `yolo_dataset/images/`。由于图片体积较大，GitHub 仓库中只保留 `data.yaml` 和 `labels/` 标注文件；如需复现实验，将图片按 `data.yaml` 的 train/val/test 结构放回 `dataset/images/` 即可。
+自采图片使用手机拍摄后传到电脑整理。最终整合数据集约有 650 张图像，包括自采正样本、网络补充样本和空桌面、线缆、显示器边框等负样本。其中已逐项审计的核心子集为 225 张图像、687 个正样本目标框。负样本计入图像总数，但不计入目标框数量。
 
-## 待补材料
+本地完整图像保存在 `yolo_dataset/images/`。GitHub 仓库只保留 `data.yaml` 和 `labels/` 等轻量、可审查内容；原始图像和网络样本不批量上传，以避免仓库过大及重复分发第三方图片。如需复现实验，将图像按 `data.yaml` 的 train/val/test 结构放回 `dataset/images/` 即可。
 
-结果视频和典型错误案例需要在 Jetson 上实际运行检测程序后保存，再放入：
+## GitHub 提交范围
 
-```text
-任务一/results_video/
-任务一/error_cases/
-```
-
-20 个物体测试正确率需要现场测试后填写到 `docs/20_object_test_template.csv`。
+仓库用于展示开发过程和保证程序可复现，提交代码、配置、标签、模型、训练结果和实验报告。完整数据集及结果视频作为课程平台提交材料单独保存，不批量放入 GitHub。20 个物体的现场验收结果应在实际测试后填写到 `docs/20_object_test_template.csv`，未填写前不在报告中声称已经达到对应正确率。

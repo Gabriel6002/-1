@@ -8,6 +8,13 @@ runs/
 raw/
 labeled/
 dataset/
+final_dataset/
+yolo_dataset/
+labeled_batch1/
+labeled_batch1_backup/
+labeled_batch2/
+labeled_bottle/
+/classes.txt
 *.jpg
 *.jpeg
 *.png

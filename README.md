@@ -22,20 +22,24 @@ cup
 
 ```text
 .
-├── 任务一/                   可直接检查的实验一提交快照
-├── tools/
+├── scripts/                    数据处理、标签检查与 Jetson/ROS2 程序
 │   ├── dataset.py            数据集划分脚本
 │   ├── labels.py             标注检查脚本
-│   ├── ultralytics.py        公共工具函数
+│   ├── common.py             设备与精度参数工具
 │   └── jetson_detect_ros2.py Jetson 实时检测与 ROS2 发布脚本
+├── data/                       YOLO 配置与 train/val/test 标签
+├── models/best.pt              最优训练权重
+├── results/training/           曲线、混淆矩阵、验证预测与训练日志
+├── report/                     PDF、LaTeX、Overleaf 工程与文字报告
 ├── docs/
 │   ├── 01-采集拍摄指南.md
-│   └── 02-标注与数据集制作.md
+│   ├── 02-标注与数据集制作.md
+│   └── 20_object_test_template.csv
 ├── requirements.txt
 └── LICENSE
 ```
 
-仓库根目录的 `tools/` 是持续维护的最新版程序；`任务一/program/` 是随本次作业保存的提交快照，用于保证报告、模型和运行说明相互对应。两处文件名可能不同，但职责明确，不应交叉修改。数据集图片与结果视频保存在课程提交材料中，不在 Git 仓库重复存放。
+每类材料只保留一个位置，不再使用空目录或重复程序副本。完整数据集图片、结果视频及现场错误案例保存在课程提交材料中，不在 GitHub 重复上传。
 
 ## 快速使用
 
@@ -50,20 +54,20 @@ labelImg raw
 划分数据集：
 
 ```bash
-python tools/dataset.py --input labeled --output yolo_dataset \
+python scripts/dataset.py --input labeled --output yolo_dataset \
     --classes mouse keyboard cup --ratio 0.7 0.2 0.1
 ```
 
 检查标注：
 
 ```bash
-python tools/labels.py --data yolo_dataset/data.yaml --show 20
+python scripts/labels.py --data data/data.yaml --show 20
 ```
 
 训练模型：
 
 ```bash
-yolo detect train data=yolo_dataset/data.yaml model=yolov8n.pt epochs=100 imgsz=640
+yolo detect train data=data/data.yaml model=yolov8n.pt epochs=100 imgsz=640
 ```
 
 Jetson 运行：
@@ -71,7 +75,7 @@ Jetson 运行：
 ```bash
 cd /home/nvidia/HYJJJ
 source /opt/ros/humble/setup.bash
-python3 jetson_detect_ros2.py --model best.pt --device 0
+python3 scripts/jetson_detect_ros2.py --model models/best.pt --device 0
 ```
 
 查看 ROS2 结果：
@@ -82,4 +86,4 @@ ros2 topic echo /desk_object_detections
 
 ## 提交材料
 
-实验一材料整理在 `任务一/` 目录中，包含数据集配置与标签、模型、程序、训练结果、运行说明以及 LaTeX/PDF 实验报告。最终整合数据集约有 650 张图像，其中已逐项审计的核心子集为 225 张图像和 687 个正样本目标框；负样本计入图像总数，但不产生正样本框。完整原始图片及结果视频不批量上传 GitHub，在课程提交材料中单独保存。
+仓库包含数据集配置与标签、模型、程序、训练结果、运行说明以及 LaTeX/PDF 实验报告。最终整合数据集约有 650 张图像，其中已逐项审计的核心子集为 225 张图像和 687 个正样本目标框；负样本计入图像总数，但不产生正样本框。完整原始图片及结果视频不批量上传 GitHub，在课程提交材料中单独保存。

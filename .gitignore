@@ -19,6 +19,10 @@ labeled_bottle/
 *.jpeg
 *.png
 *.heic
+*.mp4
+*.mov
+*.avi
+*.mkv
 
 # Python
 __pycache__/
@@ -33,11 +37,6 @@ env/
 .vscode/
 .DS_Store
 
-# 实验一提交材料需要入库
-!任务一/
-!任务一/**
-任务一/dataset/images/
-任务一/**/.DS_Store
-任务一/**/*.cache
-任务一/**/__pycache__/
-任务一/**/*.pyc
+# 仓库只保存轻量标签，图像由课程提交材料单独提供
+data/images/
+data/**/*.cache

@@ -1,4 +1,4 @@
-path: /Users/hd/Downloads/desk-object-labeling/yolo_dataset
+path: .
 
 train: images/train
 val: images/val

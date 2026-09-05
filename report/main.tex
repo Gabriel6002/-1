@@ -29,17 +29,27 @@
  \fill[Navy] (current page.north west) rectangle ([xshift=1.65cm]current page.south west);
  \fill[PaleBlue] ([xshift=1.65cm]current page.north west) rectangle (current page.south east);
  \fill[white] ([xshift=1.9cm,yshift=-1.4cm]current page.north west) rectangle ([xshift=-1.15cm,yshift=1.25cm]current page.south east);
- \fill[Blue] ([xshift=3.0cm,yshift=-4.65cm]current page.north west) rectangle ([xshift=5.05cm,yshift=-4.55cm]current page.north west);
- \draw[LightRule,line width=0.8pt] ([xshift=5.2cm,yshift=-4.6cm]current page.north west)--([xshift=-2.0cm,yshift=-4.6cm]current page.north east);
- \node[anchor=west,text=Slate,font=\sffamily\bfseries\large] at ([xshift=3.0cm,yshift=-2.3cm]current page.north west){INTEGRATED INTELLIGENT SYSTEMS LABORATORY};
- \node[anchor=east,text=Blue,font=\sffamily\bfseries] at ([xshift=-2.0cm,yshift=-2.3cm]current page.north east){LAB 01};
- \node[anchor=west,text=Blue,font=\sffamily\bfseries\fontsize{42}{46}\selectfont] at ([xshift=3.0cm,yshift=-6.15cm]current page.north west){EXPERIMENT 1};
- \node[anchor=west,text=Navy,font=\sffamily\bfseries\fontsize{26}{32}\selectfont] at ([xshift=3.0cm,yshift=-7.55cm]current page.north west){Object Detection and Recognition};
- \node[anchor=west,text=Slate,font=\sffamily\large] at ([xshift=3.0cm,yshift=-8.55cm]current page.north west){Dataset Engineering · YOLOv8 Training · Edge Deployment};
- \node[anchor=west,text=Blue,font=\sffamily\bfseries\Large] at ([xshift=3.0cm,yshift=-11.1cm]current page.north west){GROUP 11};
- \node[anchor=west,text=Navy,font=\sffamily\bfseries\LARGE] at ([xshift=3.0cm,yshift=-12.25cm]current page.north west){Hua Yingjie};
- \node[anchor=west,text=Slate,font=\sffamily\large] at ([xshift=3.0cm,yshift=-13.15cm]current page.north west){Student ID \quad 24020036025};
- \node[anchor=south east,text=Slate,font=\sffamily\small,align=right] at ([xshift=-2.0cm,yshift=2.0cm]current page.south east){YOLOv8 · Jetson · ROS2\\Experimental Report};
+ % Abstract computer-vision motif: target frames, feature nodes, and signal paths.
+ \draw[Blue!22,line width=17pt,rounded corners=18pt] ([xshift=10.6cm,yshift=-3.0cm]current page.north west) rectangle ([xshift=-2.0cm,yshift=-10.2cm]current page.north east);
+ \draw[Navy!75,line width=2.2pt,rounded corners=8pt] ([xshift=11.2cm,yshift=-3.65cm]current page.north west) rectangle ([xshift=15.0cm,yshift=-7.0cm]current page.north west);
+ \draw[Blue,line width=1.5pt,rounded corners=5pt] ([xshift=12.0cm,yshift=-5.0cm]current page.north west) rectangle ([xshift=14.1cm,yshift=-6.45cm]current page.north west);
+ \draw[Blue!65,line width=1pt] ([xshift=10.9cm,yshift=-8.25cm]current page.north west)--([xshift=12.4cm,yshift=-9.45cm]current page.north west)--([xshift=14.0cm,yshift=-8.55cm]current page.north west)--([xshift=15.2cm,yshift=-9.6cm]current page.north west);
+ \foreach \x/\y in {10.9/-8.25,12.4/-9.45,14.0/-8.55,15.2/-9.6}{\fill[Blue] ([xshift=\x cm,yshift=\y cm]current page.north west) circle (3.2pt);\draw[Blue!35] ([xshift=\x cm,yshift=\y cm]current page.north west) circle (7pt);}
+ \fill[Blue!7] ([xshift=10.5cm,yshift=-17.0cm]current page.north west) rectangle ([xshift=15.9cm,yshift=-22.4cm]current page.north west);
+ \draw[Blue!28,line width=1.1pt] ([xshift=11.1cm,yshift=-17.65cm]current page.north west) rectangle ([xshift=14.2cm,yshift=-20.1cm]current page.north west);
+ \draw[Navy!35,line width=1.1pt] ([xshift=12.25cm,yshift=-18.75cm]current page.north west) rectangle ([xshift=15.25cm,yshift=-21.25cm]current page.north west);
+ \foreach \x in {10.9,11.55,12.2,12.85,13.5,14.15,14.8,15.45}{\fill[Blue!38] ([xshift=\x cm,yshift=-23.0cm]current page.north west) circle (1.5pt);}
+ \draw[Blue,line width=2pt] ([xshift=3.0cm,yshift=-4.25cm]current page.north west)--([xshift=6.2cm,yshift=-4.25cm]current page.north west);
+ \draw[LightRule,line width=0.8pt] ([xshift=6.4cm,yshift=-4.25cm]current page.north west)--([xshift=-2.0cm,yshift=-4.25cm]current page.north east);
+ \node[anchor=west,text=Blue,font=\sffamily\bfseries\fontsize{44}{48}\selectfont] at ([xshift=3.0cm,yshift=-6.0cm]current page.north west){EXPERIMENT 1};
+ \node[anchor=west,text=Navy,font=\sffamily\bfseries\fontsize{27}{33}\selectfont] at ([xshift=3.0cm,yshift=-7.45cm]current page.north west){Object Detection};
+ \node[anchor=west,text=Navy,font=\sffamily\bfseries\fontsize{27}{33}\selectfont] at ([xshift=3.0cm,yshift=-8.45cm]current page.north west){and Recognition};
+ \fill[Blue] ([xshift=3.0cm,yshift=-10.0cm]current page.north west) circle (3pt);
+ \draw[Blue!55,line width=1pt] ([xshift=3.25cm,yshift=-10.0cm]current page.north west)--([xshift=8.4cm,yshift=-10.0cm]current page.north west);
+ \node[anchor=west,text=Blue,font=\sffamily\bfseries\Large] at ([xshift=3.0cm,yshift=-12.0cm]current page.north west){GROUP 11};
+ \node[anchor=west,text=Navy,font=\sffamily\bfseries\LARGE] at ([xshift=3.0cm,yshift=-13.15cm]current page.north west){Hua Yingjie};
+ \node[anchor=west,text=Slate,font=\sffamily\large] at ([xshift=3.0cm,yshift=-14.05cm]current page.north west){Student ID \quad 24020036025};
+ \node[anchor=south east,text=Navy,font=\sffamily\bfseries\small,align=right] at ([xshift=-2.0cm,yshift=2.0cm]current page.south east){OCEAN UNIVERSITY OF CHINA};
 \end{tikzpicture}\mbox{}
 \end{titlepage}
 

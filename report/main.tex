@@ -18,7 +18,7 @@
 \titleformat{\subsubsection}{\normalsize\bfseries\sffamily\color{Slate}}{\thesubsubsection}{0.55em}{}
 \titlespacing*{\section}{0pt}{1.6em}{0.8em}\titlespacing*{\subsection}{0pt}{1.1em}{0.45em}
 \pagestyle{fancy}\fancyhf{}
-\fancyhead[L]{\small\sffamily\color{Slate}Integrated Intelligent Systems Laboratory}
+\fancyhead[L]{}
 \fancyhead[R]{\small\sffamily\color{Slate}Experiment 1: Object Detection and Recognition}
 \fancyfoot[C]{\small\sffamily\color{Slate}\thepage\ / \pageref{LastPage}}
 \renewcommand{\headrulewidth}{0.45pt}\renewcommand{\footrulewidth}{0pt}
@@ -45,7 +45,7 @@
 
 \pagenumbering{Roman}\setcounter{page}{1}
 \section*{Abstract}\addcontentsline{toc}{section}{Abstract}
-This report presents an end-to-end desktop object detection system designed for deployment on an NVIDIA Jetson edge device. The system detects three classes---mouse, keyboard, and cup---and covers data acquisition, automatic pre-annotation, manual review, dataset auditing, YOLOv8 transfer learning, independent evaluation, real-time camera inference, and a ROS2-compatible output interface. The integrated dataset contains approximately 650 images from self-collected scenes, supplementary online samples, and negative backgrounds. A fully audited core subset contains 225 images and 687 positive bounding boxes; 15 orphan annotation files were identified and isolated during quality control. YOLOv8n was trained for 100 epochs on an Apple Silicon Mac using the PyTorch MPS backend. Validation achieved a precision of 0.806, recall of 0.894, mAP@0.5 of 0.888, and mAP@0.5:0.95 of 0.814. The final Jetson video contains 300 frames at 1280$\times$720 over 20 s and consistently displays 15 FPS, exceeding the required 5 FPS while detecting all three target classes.
+This report presents an end-to-end desktop object detection system designed for deployment on an NVIDIA Jetson edge device. The system detects three classes---mouse, keyboard, and cup---and covers data acquisition, automatic pre-annotation, manual review, dataset auditing, YOLOv8 transfer learning, independent evaluation, real-time camera inference, and a ROS2-compatible output interface. The integrated dataset contains approximately 650 source images from self-collected scenes, supplementary online samples, and negative backgrounds. A fully audited core subset contains 225 source images and 687 positive bounding boxes; 15 orphan annotation files were identified and isolated during quality control. Cup-focused offline augmentation adds 45 training samples with geometrically transformed labels, producing a 270-image training representation with 935 boxes, including 116 Cup instances. YOLOv8n was trained for 100 epochs on an Apple Silicon Mac using the PyTorch MPS backend. Validation achieved a precision of 0.806, recall of 0.894, mAP@0.5 of 0.888, and mAP@0.5:0.95 of 0.814. The final Jetson video contains 300 frames at 1280$\times$720 over 20 s and consistently displays 15 FPS, exceeding the required 5 FPS while detecting all three target classes.
 
 \vspace{0.8em}\noindent\textbf{Keywords:} object detection; YOLOv8; Jetson; automatic pre-annotation; dataset quality audit; edge deployment; ROS2
 \clearpage\tableofcontents\clearpage
@@ -76,7 +76,7 @@ The workflow consists of data engineering, model training, edge deployment, and 
 \begin{tikzpicture}[
  stage/.style={rounded corners=6pt,draw=LightRule,line width=0.9pt,fill=white,text width=3.45cm,minimum height=1.32cm,align=left,font=\small\sffamily,inner xsep=10pt},
  active/.style={stage,draw=Navy,fill=Navy,text=white},
- badge/.style={circle,fill=Blue,text=white,minimum size=6.5mm,inner sep=0pt,font=\scriptsize\sffamily\bfseries},
+ badge/.style={rounded corners=2pt,draw=Blue,fill=PaleBlue,text=Blue,minimum width=8mm,minimum height=5.5mm,inner sep=1pt,font=\scriptsize\sffamily\bfseries},
  arrow/.style={-{Latex[length=2.7mm]},line width=1.05pt,draw=Blue},
  feedback/.style={-{Latex[length=2.5mm]},line width=0.9pt,draw=Slate,dashed}]
  \node[stage](collect){\textbf{DATA ACQUISITION}\\\footnotesize Self-collected, online, and negative samples};
@@ -85,12 +85,12 @@ The workflow consists of data engineering, model training, edge deployment, and 
  \node[active,below=1.0cm of audit](train){\textbf{MODEL TRAINING}\\\footnotesize YOLOv8n transfer learning on MPS};
  \node[active,left=0.65cm of train](jetson){\textbf{EDGE INFERENCE}\\\footnotesize Jetson camera at 15 FPS};
  \node[stage,left=0.65cm of jetson](ros){\textbf{SYSTEM OUTPUT}\\\footnotesize Overlays, logs, and ROS2 payload};
- \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]collect.north west){1};
- \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]label.north west){2};
- \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]audit.north west){3};
- \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]train.north west){4};
- \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]jetson.north west){5};
- \node[badge,anchor=south west] at ([xshift=3pt,yshift=-3pt]ros.north west){6};
+ \node[badge,anchor=south west] at ([xshift=10pt,yshift=-2pt]collect.north west){01};
+ \node[badge,anchor=south west] at ([xshift=10pt,yshift=-2pt]label.north west){02};
+ \node[badge,anchor=south west] at ([xshift=10pt,yshift=-2pt]audit.north west){03};
+ \node[badge,anchor=south west] at ([xshift=10pt,yshift=-2pt]train.north west){04};
+ \node[badge,anchor=south west] at ([xshift=10pt,yshift=-2pt]jetson.north west){05};
+ \node[badge,anchor=south west] at ([xshift=10pt,yshift=-2pt]ros.north west){06};
  \draw[arrow](collect)--(label);\draw[arrow](label)--(audit);\draw[arrow](audit)--(train);\draw[arrow](train)--(jetson);\draw[arrow](jetson)--(ros);
  \draw[feedback](ros.south)--++(0,-0.62)-|node[pos=0.46,below,font=\footnotesize\sffamily\bfseries,color=Slate,fill=white,inner sep=3pt]{ERROR-DRIVEN DATA FEEDBACK}(collect.south);
 \end{tikzpicture}
@@ -113,7 +113,9 @@ Target classes & Mouse, Keyboard, Cup\\\bottomrule\end{tabular}\end{table}
 \subsection{Multi-source data design}
 The dataset uses self-collected images as the primary source and online images as supplementary material. Self-collected data matches the deployment domain and covers different desks, lighting conditions, distances, scales, poses, and occlusion levels. Online samples improve diversity in object appearance, color, shape, and background. Their licenses, class definitions, and annotations must be reviewed before use.
 
-The integrated collection contains approximately 650 images, including positive scenes and negative samples. Negative scenes contain empty desks, cables, monitor borders, packages, and other visually similar distractors. They help suppress background false positives. The fully audited core subset contains 225 images and 687 positive boxes. A negative image contributes to the image count but contains no positive box.
+The integrated collection contains approximately 650 source images, including positive scenes and negative samples. Negative scenes contain empty desks, cables, monitor borders, packages, and other visually similar distractors. They help suppress background false positives. The fully audited core subset contains 225 source images and 687 positive boxes. A negative image contributes to the image count but contains no positive box.
+
+To strengthen the long-tail Cup class without inventing annotations, 45 training images that already contained a verified Cup box were processed by horizontal mirroring and mild contrast/brightness adjustment. Every YOLO center coordinate was transformed using $x'_{c}=1-x_{c}$, while $y_c$, width, height, and the class identifier were preserved. This produced 45 additional training samples. The resulting training representation contains 270 images and 935 boxes: 370 Mouse, 449 Keyboard, and 116 Cup instances. Augmented samples are kept in the training partition only and are never copied into validation or test sets.
 
 \subsection{Automatic pre-annotation and manual review}
 A general-purpose pretrained detector first generated candidate boxes. These candidates were converted to YOLO format and then reviewed image by image. Manual review corrected box boundaries and class identifiers, restored missed objects, and removed false annotations. This human-in-the-loop process changes labeling from drawing every box from scratch to validating and correcting candidates, improving efficiency without treating machine predictions as ground truth.
@@ -124,18 +126,21 @@ Positive samples include isolated objects, multi-object scenes, partial occlusio
 \subsection{Dataset audit and split}
 The audit checked image-label correspondence, legal class identifiers, normalized coordinates within $[0,1]$, positive box dimensions, and orphan files. Fifteen labels without matching images were isolated. The audited subset was divided with random seed 42 into 180 training images, 22 validation images, and 23 test images. Consecutive frames and near-duplicate samples were grouped before splitting to reduce leakage.
 
-\begin{table}[htbp]\centering\caption{Bounding-box distribution in the audited subset}\label{tab:data}
+\begin{table}[htbp]\centering\caption{Training representation after Cup-focused augmentation}\label{tab:data}
 \begin{tabular}{lrr}\toprule \textbf{Class} & \textbf{Boxes} & \textbf{Share (\%)}\\\midrule
-Mouse & 278 & 40.47\\ Keyboard & 347 & 50.51\\ Cup & 62 & 9.02\\\midrule
-\textbf{Total} & \textbf{687} & \textbf{100.00}\\\bottomrule\end{tabular}\end{table}
+Mouse & 370 & 39.57\\ Keyboard & 449 & 48.02\\ Cup & 116 & 12.41\\\midrule
+\textbf{Total} & \textbf{935} & \textbf{100.00}\\\bottomrule\end{tabular}\end{table}
 
-Cup accounts for only 9.02\% of the positive boxes and is therefore a long-tail class. Per-class recall and AP are important in addition to overall mAP.
+Cup remains the least frequent class even after increasing its representation to 116 boxes. Per-class recall and AP therefore remain important in addition to overall mAP.
 
 \begin{figure}[htbp]\centering
 \begin{subfigure}[t]{0.42\textwidth}\centering\includegraphics[width=\linewidth]{figures/dataset-class-distribution.png}\caption{Bounding-box distribution}\end{subfigure}\hfill
 \begin{subfigure}[t]{0.55\textwidth}\centering\includegraphics[width=\linewidth]{figures/dataset-annotation-montage.jpg}\caption{YOLO labels rendered on audited images}\end{subfigure}
 \caption{Dataset statistics and annotation evidence generated from the audited subset}\label{fig:data}
 \end{figure}
+
+\subsection{Near-duplicate control and data leakage prevention}
+Desktop images are frequently captured in bursts or extracted from video, so adjacent frames can be almost identical in background, illumination, and object position. A purely random image-level split may place such frames in both training and test sets and produce overly optimistic metrics. Samples were therefore grouped by capture batch, video segment, and consecutive filename range before splitting. The augmented Cup samples inherit the training-only status of their sources. Perceptual hashing can be added as a second screening step, and the test set must remain untouched while augmentation parameters and confidence thresholds are selected.
 
 \section{YOLOv8 Model Training}
 YOLOv8n was selected as the edge baseline because of its small parameter count and low latency. Training started from general pretrained weights with an input size of $640\times640$, batch size 8, and 100 epochs on MPS. The objective combines box regression, classification, and distribution focal loss:
@@ -147,6 +152,15 @@ For evaluation,
 AP is the area under the precision-recall curve, while mAP averages AP across classes. Both mAP@0.5 and mAP@0.5:0.95 are reported to avoid overestimating localization quality at a single IoU threshold.
 
 YOLOv8s may be evaluated under the same split, image size, epochs, and test procedure. It should replace YOLOv8n only if its accuracy gain justifies the additional latency and it remains above 5 FPS on Jetson. This is a planned controlled comparison, not a claimed completed result.
+
+\begin{table}[htbp]\centering\caption{Edge-model comparison and selection criteria}
+\begin{tabularx}{0.9\textwidth}{lXXX}\toprule
+\textbf{Model} & \textbf{Main advantage} & \textbf{Main cost} & \textbf{Selection condition}\\\midrule
+YOLOv8n & Low parameter count and latency & Lower potential accuracy ceiling & Real-time performance or limited compute is the priority\\
+YOLOv8s & Stronger feature representation & Higher latency and memory use & Measured Jetson speed remains above 5 FPS\\\bottomrule
+\end{tabularx}\end{table}
+
+The comparison must use the same random seed and report parameter count, serialized model size, per-class AP, peak memory, mean FPS, minimum FPS, and end-to-end latency. This prevents an apparent accuracy gain from being caused by a different split or a more favorable threshold.
 
 \section{Training and Validation Results}
 \begin{table}[htbp]\centering\caption{YOLOv8n validation results}\label{tab:metrics}
@@ -170,6 +184,18 @@ This is a host-side value and does not replace end-to-end Jetson measurement, wh
 
 Mouse and Keyboard have more training instances and more stable outlines. Cup is less frequent and varies substantially because of transparency, reflection, handles, and background color. Confidence thresholds therefore require class-aware review: lowering the threshold improves recall but introduces more false positives, whereas raising it can suppress small or occluded targets.
 
+\subsection{Ablation protocol}
+An ablation study should isolate the contribution of each data-engineering decision. The baseline uses the audited source set with default augmentation. Subsequent runs add Cup-focused offline augmentation, negative backgrounds, and deployment hard cases one factor at a time. Model architecture, epoch count, image size, split, and evaluation script remain fixed. Overall metrics must be reported together with Cup recall and the number of background false positives.
+
+\begin{table}[htbp]\centering\caption{Controlled ablation plan}
+\begin{tabularx}{0.92\textwidth}{lXX}\toprule
+\textbf{Run} & \textbf{Single controlled change} & \textbf{Expected evidence}\\\midrule
+A & Audited source set only & Reproducible baseline\\
+B & Add Cup-focused augmentation & Improved Cup recall and robustness\\
+C & Add negative backgrounds & Fewer desk-edge and package false positives\\
+D & Add deployment hard cases & Better low-light, occlusion, and small-object behavior\\\bottomrule
+\end{tabularx}\end{table}
+
 \begin{figure}[htbp]\centering
 \begin{subfigure}[t]{0.49\textwidth}\centering\includegraphics[width=\linewidth]{figures/training-command-history.png}\caption{Training commands recorded on the Mac}\end{subfigure}\hfill
 \begin{subfigure}[t]{0.49\textwidth}\centering\includegraphics[width=\linewidth]{figures/training-results.png}\caption{Metrics over 100 epochs}\end{subfigure}
@@ -178,6 +204,8 @@ Mouse and Keyboard have more training instances and more stable outlines. Cup is
 
 \section{Jetson Deployment and Runtime Results}\label{sec:jetson}
 The trained \texttt{best.pt} model was transferred to Jetson. OpenCV captures each frame, YOLOv8 returns class identifiers, confidence scores, and bounding boxes, and the program draws the results while measuring FPS. The program can save video and CSV logs and can publish the same structured output for downstream perception or control nodes.
+
+Training and deployment are deliberately decoupled. The Mac performs dataset processing, accelerated training, and offline evaluation, whereas the Jetson performs capture, inference, rendering, logging, and communication. Versioned weights make rollback possible when a newer model improves offline mAP but behaves less reliably under the live camera domain. Runtime logging records timestamps, classes, confidence values, pixel coordinates, and frame rate so that failures can be traced back to exact frames.
 
 TensorRT FP16 export is a reproducible optimization path that can reduce compute and memory use. A valid comparison must keep image resolution, confidence threshold, camera input, and power mode fixed and report pure inference latency, end-to-end latency, mean and minimum FPS, and memory usage. TensorRT acceleration is not presented here as a completed measurement.
 
@@ -209,13 +237,25 @@ ROS2, \texttt{colcon}, and \texttt{rclpy} were not installed on the Mac. Consequ
 
 For the required 20-object acceptance test, at least 20 physical instances should cover the three classes, viewpoints, distances, and occlusion levels. Each correct detection, missed detection, and false detection must be recorded. The acceptance accuracy is the number of correctly recognized objects divided by the total number tested. This result must be reported separately from mAP.
 
+System-level evaluation should additionally report average and minimum FPS, preprocessing, inference, and postprocessing latency, message publication frequency, dropped frames, and continuous-run stability. These measures distinguish model accuracy from the behavior of the complete camera-to-message pipeline.
+
 \section{Error Analysis and Improvements}
 A low-confidence Mouse candidate with confidence 0.26 appears near the left border of one recorded frame. The result illustrates the precision-recall trade-off: a low threshold preserves difficult targets but may accept background structures. Adding desk edges, chassis edges, cables, and dark elongated objects as negative samples can reduce this error.
 
 Domain shift also exists between training images and Jetson video because of focal length, exposure, motion blur, and viewpoint. Cup is especially vulnerable under reflections, low light, and background-color similarity. Error frames should be categorized as low light, occlusion, small object, clutter, or motion blur, manually reviewed, and added to the next training round. A controlled ablation can then compare the baseline, augmentation, negative samples, and hard-case feedback while keeping the split and training settings fixed.
 
 \section{Engineering Contributions}
-First, automatic pre-annotation followed by manual review provides an efficient and reliable human-in-the-loop dataset workflow. Second, the project treats dataset construction as quality engineering by checking orphan labels, invalid classes, out-of-range coordinates, imbalance, and near duplicates. Third, the detector is evaluated as an edge system rather than only an offline model: camera input, overlays, frame rate, saved evidence, and a ROS2-compatible output are integrated. Finally, deployment errors are returned to the dataset, forming a continuous improvement loop that is more informative than simply increasing the epoch count.
+\subsection{Human-in-the-loop annotation}
+Automatic pre-annotation followed by manual review provides an efficient and reliable dataset workflow. Candidate boxes reduce repetitive drawing effort, while human decisions remain responsible for class correctness, missed objects, tight boundaries, and difficult Cup instances. The workflow can be repeated when new classes or deployment scenes are introduced.
+
+\subsection{Dataset quality as an engineering task}
+The project goes beyond reporting only image and box counts. It checks orphan labels, invalid classes, out-of-range coordinates, empty labels, imbalance, and near duplicates, then uses grouped splitting to limit leakage. The detection and isolation of 15 abnormal labels is a directly verifiable outcome of this audit. Cup-focused augmentation further addresses imbalance using real verified boxes rather than fabricated counts.
+
+\subsection{From a model demo to an edge perception system}
+Camera input, YOLO inference, overlays, frame-rate measurement, saved evidence, and a ROS2-compatible output are integrated into one deployment path. YOLOv8n camera inference has been measured, while YOLOv8s comparison and TensorRT FP16 remain explicitly identified as future controlled optimizations rather than completed results.
+
+\subsection{Error-driven closed-loop improvement}
+The deployment domain differs from still training images in focal length, exposure, blur, and viewpoint. Saving low-confidence and incorrect frames converts runtime behavior into traceable data tasks. After categorization and manual review, those samples can be added to training and compared on the fixed test set. This loop is more informative than increasing epochs without diagnosing the source of error.
 
 \section{Project Archive and Reproducibility}
 Code, dataset configuration, audited labels, the trained model, training results, and the report are organized in the personal repository \href{https://github.com/Gabriel6002/-1}{Gabriel6002/-1}. Large image collections and the final video are intentionally excluded from GitHub. The repository uses one clear location for each artifact category: \texttt{scripts/}, \texttt{data/}, \texttt{models/}, \texttt{results/}, \texttt{report/}, and \texttt{docs/}.
@@ -225,9 +265,9 @@ Code, dataset configuration, audited labels, the trained model, training results
 \end{figure}
 
 \section{Conclusion}
-This experiment completed an end-to-end desktop object detector from multi-source dataset construction to real-time Jetson execution. The integrated dataset contains approximately 650 images, including self-collected positives, supplementary online samples, and negative backgrounds. The audited core contains 225 images and 687 positive boxes, and quality control prevented 15 orphan labels from entering training. YOLOv8n achieved precision 0.806, recall 0.894, mAP@0.5 0.888, and mAP@0.5:0.95 0.814. The final video demonstrates real-time detection of Keyboard, Mouse, and Cup at a stable displayed rate of 15 FPS, satisfying the course requirement.
+This experiment completed an end-to-end desktop object detector from multi-source dataset construction to real-time Jetson execution. The integrated dataset contains approximately 650 source images, including self-collected positives, supplementary online samples, and negative backgrounds. The audited core contains 225 source images and 687 positive boxes, and quality control prevented 15 orphan labels from entering training. A further 45 training-only augmented samples increased the training representation to 935 boxes, including 116 Cup instances. YOLOv8n achieved precision 0.806, recall 0.894, mAP@0.5 0.888, and mAP@0.5:0.95 0.814. The final video demonstrates real-time detection of Keyboard, Mouse, and Cup at a stable displayed rate of 15 FPS, satisfying the course requirement.
 
-The work shows that a complete object-detection experiment requires dataset quality control, independent evaluation, hardware deployment, latency measurement, reproducible archiving, and error feedback. Future work should expand Cup and negative samples and complete live ROS2 topic verification on Jetson.
+The work shows that a complete object-detection experiment requires dataset quality control, independent evaluation, hardware deployment, latency measurement, reproducible archiving, and error feedback. Future work should collect additional independent Cup scenes, continue expanding hard negative samples, and complete live ROS2 topic verification on Jetson.
 
 \section*{References}\addcontentsline{toc}{section}{References}
 \begin{enumerate}[label={\lbrack\arabic*\rbrack},leftmargin=2.6em]

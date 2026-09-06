@@ -38,7 +38,7 @@ cup
 ├── docs/
 │   ├── 01-采集拍摄指南.md
 │   ├── 02-标注与数据集制作.md
-│   └── 20_object_test_template.csv
+│   └── 20_sample_video_test.csv  最终视频的 20 个时间采样点验收记录
 ├── requirements.txt
 └── LICENSE
 ```
@@ -131,6 +131,13 @@ data/images/test/
 筛选其带边界框的 `Computer mouse`、`Computer keyboard` 和 `Coffee cup` 类别，分别映射为
 本项目的 `mouse`、`keyboard` 和 `cup`。不要误用表示动物的 `Mouse` 类别。下载样本在纳入数据集前
 需要记录来源与许可证状态，并经过重复图片筛查、类别映射检查和人工边界框复核。原始下载图片仍不上传 GitHub。
+
+## 视频验收记录
+
+最终 20 s 视频按每秒一个时间点抽取 20 个验收样本，记录见
+`docs/20_sample_video_test.csv`。其中 19 个样本判定正确；约 15.5 s 处手臂区域被低置信度
+误检为 `mouse`（0.28），因此时间采样准确率为 19/20，即 95%。该结果来自视频画面核验，
+并与训练集 mAP 分开报告。
 
 ## 提交材料
 

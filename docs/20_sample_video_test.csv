@@ -1,0 +1,21 @@
+sample_id,timestamp_s,true_class,predicted_class,confidence,correct,observation
+1,0.5,mouse,mouse,0.90,yes,black wired mouse
+2,1.5,mouse,mouse,0.87,yes,black wired mouse
+3,2.5,cup,cup,0.91,yes,cup introduced into scene
+4,3.5,cup,cup,0.89,yes,cup at a changed pose
+5,4.5,cup,cup,0.93,yes,hand near cup
+6,5.5,mouse,mouse,0.88,yes,cup temporarily absent
+7,6.5,cup,cup,0.93,yes,cup restored to scene
+8,7.5,cup,cup,0.93,yes,stable three-object view
+9,8.5,mouse,mouse,0.93,yes,black wired mouse
+10,9.5,mouse,mouse,0.84,yes,black wired mouse
+11,10.5,mouse,mouse,0.84,yes,blue wireless mouse introduced
+12,11.5,mouse,mouse,0.76,yes,blue mouse at lower confidence
+13,12.5,mouse,mouse,0.90,yes,blue wireless mouse
+14,13.5,mouse,mouse,0.77,yes,blue mouse under changed viewpoint
+15,14.5,mouse,mouse,0.84,yes,blue wireless mouse
+16,15.5,background/hand,mouse,0.28,no,oversized false-positive box on hand and arm
+17,16.5,mouse,mouse,0.79,yes,blue mouse with low-confidence border false positive elsewhere
+18,17.5,mouse,mouse,0.85,yes,blue wireless mouse
+19,18.5,mouse,mouse,0.87,yes,blue wireless mouse
+20,19.5,mouse,mouse,0.85,yes,blue wireless mouse

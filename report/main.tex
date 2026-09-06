@@ -11,6 +11,7 @@
 \hypersetup{colorlinks=true,linkcolor=Navy,urlcolor=Blue,pdfauthor={Hua Yingjie},pdftitle={Experiment 1: Object Detection and Recognition}}
 \graphicspath{{figures/}{images/}}
 \setlength{\parindent}{1.5em}\setlength{\parskip}{0.18em}
+\setlength{\emergencystretch}{1.5em}
 \setlist{nosep,leftmargin=2.2em}
 \captionsetup{font=small,labelfont={bf,color=Navy},labelsep=quad,skip=6pt}
 \titleformat{\section}{\Large\bfseries\sffamily\color{Navy}}{\thesection}{0.75em}{}[\vspace{2pt}\color{LightRule}\titlerule]
@@ -273,7 +274,7 @@ Code, dataset configuration, audited labels, the trained model, training results
 For deployment repeatability, the model file, class order, input resolution, confidence threshold, software versions, and Git revision should be logged together. Timing measurements should include a warm-up period and distinguish pure model inference from camera decoding, preprocessing, drawing, ROS2 serialization, and video writing. Recording mean, minimum, and percentile latency avoids presenting a single favorable frame as system performance.
 
 \begin{table}[htbp]\centering\caption{Reproducibility checklist and evidence boundary}\label{tab:repro}
-{\renewcommand{\arraystretch}{1.18}\begin{tabular}{p{4.4cm}p{5.1cm}p{4.0cm}}\toprule
+{\renewcommand{\arraystretch}{1.08}\begin{tabular}{p{4.4cm}p{5.1cm}p{4.0cm}}\toprule
 \textbf{Artifact or check} & \textbf{Repository evidence} & \textbf{Status}\\\midrule
 Training and dataset code & \texttt{scripts/}, \texttt{data/data.yaml} & Archived and syntax-checked\\
 Audited annotations & \texttt{data/labels/} & 270 files, 935 valid boxes\\
@@ -287,17 +288,19 @@ Raw images and video & Excluded by repository policy & Kept outside public Git h
 \subsection{Validity boundaries}
 The 45 Cup augmentations increase training exposure but are correlated derivatives, not independent test evidence; consequently, they are excluded from validation and testing. The approximately 650-image integrated pool combines self-collected, online, and negative material, whereas the 225-image core is the subset with complete audited image--label correspondence. Domain shift can remain between online imagery and the Jetson camera. Finally, the ROS2 message structure has been validated offline, but a live Jetson \texttt{ros2 topic echo} result is not presented. These boundaries distinguish measured results from engineering proposals.
 
-\begin{figure}[htbp]\centering\includegraphics[width=0.92\textwidth]{figures/github-commit-history.png}
-\caption{Incremental Git commit history generated from the local repository log}\label{fig:git}
-\end{figure}
+\begin{center}\vspace{-0.4em}
+\includegraphics[width=0.80\textwidth]{figures/github-commit-history.png}
+\captionof{figure}{Incremental Git commit history generated from the local repository log}\label{fig:git}
+\vspace{-0.5em}\end{center}
 
 \section{Conclusion}
 This experiment completed an end-to-end desktop object detector from multi-source dataset construction to real-time Jetson execution. The integrated dataset contains approximately 650 source images, including self-collected positives, supplementary online samples, and negative backgrounds. The audited core contains 225 source images and 687 positive boxes, and quality control prevented 15 orphan labels from entering training. A further 45 training-only augmented samples increased the training representation to 935 boxes, including 116 Cup instances. YOLOv8n achieved precision 0.806, recall 0.894, mAP@0.5 0.888, and mAP@0.5:0.95 0.814. The 20 s video includes detections of Keyboard, Mouse, and Cup and shows approximately 14.8--15.0 FPS in inspected frames, satisfying the 5 FPS requirement. It also preserves transient failure cases that motivate hard-negative and occlusion-focused refinement.
 
 The work shows that a complete object-detection experiment requires dataset quality control, independent evaluation, hardware deployment, latency measurement, reproducible archiving, and error feedback. Future work should collect additional independent Cup scenes, continue expanding hard negative samples, and complete live ROS2 topic verification on Jetson.
 
+\clearpage
 \section*{References}\addcontentsline{toc}{section}{References}
-\begin{enumerate}[label={\lbrack\arabic*\rbrack},leftmargin=2.6em]
+\begin{enumerate}[label={\lbrack\arabic*\rbrack},leftmargin=2.6em,nosep]\small
 \item G. Jocher, A. Chaurasia, and J. Qiu, ``Ultralytics YOLO,'' 2023. [Online]. Available: \url{https://github.com/ultralytics/ultralytics}
 \item J. Redmon, S. Divvala, R. Girshick, and A. Farhadi, ``You Only Look Once: Unified, Real-Time Object Detection,'' in \emph{Proc. CVPR}, 2016, pp. 779--788.
 \item NVIDIA, ``NVIDIA TensorRT Developer Guide.'' [Online]. Available: \url{https://docs.nvidia.com/deeplearning/tensorrt/}

@@ -269,8 +269,14 @@ Camera input, YOLO inference, overlays, frame-rate measurement, saved evidence, 
 \subsection{Error-driven closed-loop improvement}
 The deployment domain differs from still training images in focal length, exposure, blur, and viewpoint. Saving low-confidence and incorrect frames converts runtime behavior into traceable data tasks. After categorization and manual review, those samples can be added to training and compared on the fixed test set. This loop is more informative than increasing epochs without diagnosing the source of error.
 
+\clearpage
 \section{Project Archive and Reproducibility}
 Code, dataset configuration, audited labels, the trained model, training results, and the report are organized in the personal GitHub repository \href{https://github.com/Gabriel6002/-1}{github.com/Gabriel6002/-1}. Figure~\ref{fig:git} summarizes the incremental commit activity during the development period; the repository link provides access to the complete commit record. Large image collections and the final video are intentionally excluded from GitHub. The repository uses one clear location for each artifact category: \texttt{scripts/}, \texttt{data/}, \texttt{models/}, \texttt{results/}, \texttt{report/}, and \texttt{docs/}.
+
+\begin{center}\vspace{0.2em}
+\includegraphics[width=0.82\textwidth]{figures/github-commit-history.png}
+\captionof{figure}{GitHub commit activity during the project development period}\label{fig:git}
+\vspace{0.2em}\end{center}
 
 For deployment repeatability, the model file, class order, input resolution, confidence threshold, software versions, and Git revision should be logged together. Timing measurements should include a warm-up period and distinguish pure model inference from camera decoding, preprocessing, drawing, ROS2 serialization, and video writing. Recording mean, minimum, and percentile latency avoids presenting a single favorable frame as system performance.
 
@@ -288,11 +294,6 @@ Raw images and video & Excluded by repository policy & Kept outside public Git h
 
 \subsection{Validity boundaries}
 The 45 Cup augmentations increase training exposure but are correlated derivatives, not independent test evidence; consequently, they are excluded from validation and testing. The approximately 650-image integrated pool combines self-collected, online, and negative material, whereas the 225-image core is the subset with complete audited image--label correspondence. Domain shift can remain between online imagery and the Jetson camera. Finally, the ROS2 message structure has been validated offline, but a live Jetson \texttt{ros2 topic echo} result is not presented. These boundaries distinguish measured results from engineering proposals.
-
-\begin{center}\vspace{-0.4em}
-\includegraphics[width=0.86\textwidth]{figures/github-commit-history.png}
-\captionof{figure}{GitHub commit activity during the project development period}\label{fig:git}
-\vspace{-0.5em}\end{center}
 
 \section{Conclusion}
 This experiment completed an end-to-end desktop object detector from multi-source dataset construction to real-time Jetson execution. The integrated dataset contains approximately 650 source images, including self-collected positives, supplementary online samples, and negative backgrounds. The audited core contains 225 source images and 687 positive boxes, and quality control prevented 15 orphan labels from entering training. A further 45 training-only augmented samples increased the training representation to 935 boxes, including 116 Cup instances. YOLOv8n achieved precision 0.806, recall 0.894, mAP@0.5 0.888, and mAP@0.5:0.95 0.814. The 20 s video includes detections of Keyboard, Mouse, and Cup and shows approximately 14.8--15.0 FPS in inspected frames, satisfying the 5 FPS requirement. The 20-point temporal acceptance review achieved 19/20 correct decisions (95\%) and retained the hand/arm false-positive event as evidence for hard-negative and occlusion-focused refinement.

@@ -50,7 +50,7 @@
 
 \pagenumbering{Roman}\setcounter{page}{1}
 \section*{Abstract}\addcontentsline{toc}{section}{Abstract}
-This report presents an end-to-end desktop object detection system designed for deployment on an NVIDIA Jetson edge device. The system detects three classes---mouse, keyboard, and cup---and covers data acquisition, automatic pre-annotation, manual review, dataset auditing, YOLOv8 transfer learning, independent evaluation, real-time camera inference, and a ROS2-compatible output interface. The integrated dataset contains approximately 650 source images from self-collected scenes, supplementary online samples, and negative backgrounds. A fully audited core subset contains 225 source images and 687 positive bounding boxes; 15 orphan annotation files were identified and isolated during quality control. Cup-focused offline augmentation adds 45 training samples with geometrically transformed labels, producing a 270-image training representation with 935 boxes, including 116 Cup instances. YOLOv8n was trained for 100 epochs on an Apple Silicon Mac using the PyTorch MPS backend. Validation achieved a precision of 0.806, recall of 0.894, mAP@0.5 of 0.888, and mAP@0.5:0.95 of 0.814. The final Jetson video contains 300 frames at 1280$\times$720 over 20 s and consistently displays 15 FPS, exceeding the required 5 FPS while detecting all three target classes.
+This report presents an end-to-end desktop object detection system designed for deployment on an NVIDIA Jetson edge device. The system detects three classes---mouse, keyboard, and cup---and covers data acquisition, automatic pre-annotation, manual review, dataset auditing, YOLOv8 transfer learning, independent evaluation, real-time camera inference, and a ROS2-compatible output interface. The integrated dataset contains approximately 650 source images from self-collected scenes, supplementary online samples, and negative backgrounds. A fully audited core subset contains 225 source images and 687 positive bounding boxes; 15 orphan annotation files were identified and isolated during quality control. Cup-focused offline augmentation adds 45 training samples with geometrically transformed labels, producing a 270-image training representation with 935 boxes, including 116 Cup instances. YOLOv8n was trained for 100 epochs on an Apple Silicon Mac using the PyTorch MPS backend. Validation achieved a precision of 0.806, recall of 0.894, mAP@0.5 of 0.888, and mAP@0.5:0.95 of 0.814. The final Jetson video contains 300 frames at 1280$\times$720 over 20 s. Inspected frames show an on-screen rate of approximately 14.8--15.0 FPS, above the required 5 FPS, and include detections of Keyboard, Mouse, and Cup.
 
 \vspace{0.8em}\noindent\textbf{Keywords:} object detection; YOLOv8; Jetson; automatic pre-annotation; dataset quality audit; edge deployment; ROS2
 \clearpage\tableofcontents\clearpage
@@ -70,8 +70,8 @@ Run recognition on Jetson & Live camera inference completed; see Section~\ref{se
 Show class, box, and confidence & All three items are overlaid in the recorded output\\
 Publish detection results through ROS2 & Publisher and message schema completed; payload validated offline on Mac, while live topic echo remains an on-device integration item\\
 Test 20 objects with at least 80\% accuracy & A controlled procedure and record sheet are provided for on-site acceptance\\
-At least 5 FPS on Jetson & Recorded interface displays a stable 15 FPS\\
-Save results and representative errors & Final video and a low-confidence false-positive example are retained\\\bottomrule
+At least 5 FPS on Jetson & Recorded interface displays approximately 14.8--15.0 FPS in inspected frames\\
+Save results and representative errors & Final video contains a transient extra Keyboard box and an occlusion-related oversized Mouse box\\\bottomrule
 \end{tabular}}\end{table}
 
 \section{System Architecture}
@@ -217,7 +217,7 @@ Training and deployment are deliberately decoupled. The Mac performs dataset pro
 
 TensorRT FP16 export is a reproducible optimization path that can reduce compute and memory use. A valid comparison must keep image resolution, confidence threshold, camera input, and power mode fixed and report pure inference latency, end-to-end latency, mean and minimum FPS, and memory usage. TensorRT acceleration is not presented here as a completed measurement.
 
-The final video is 1280$\times$720, 300 frames, and 20 s at 15 FPS. Twelve uniformly spaced frames all displayed 15.0 FPS. Figure~\ref{fig:jetson} shows simultaneous detection of Keyboard, Mouse, and Cup, including a Cup confidence of 0.89.
+Container metadata reports a 1280$\times$720 video, 300 frames, 20.0 s duration, and a nominal rate of 15 FPS. Manual inspection at the beginning, middle, and later portions shows an overlay between 14.8 and 15.0 FPS. The video demonstrates Keyboard, Mouse, and Cup across the sequence; it does not constitute a frame-by-frame accuracy test. Visible examples include Mouse confidence 0.93 near the beginning and Cup confidence around 0.91--0.93 after it enters the scene. Figure~\ref{fig:jetson} shows representative multi-object frames.
 
 \begin{figure}[htbp]\centering
 \begin{subfigure}[t]{0.485\textwidth}\centering\includegraphics[width=\linewidth]{figures/jetson-cup.jpg}\caption{Three classes detected; Cup confidence 0.89}\end{subfigure}\hfill
@@ -227,11 +227,11 @@ The final video is 1280$\times$720, 300 frames, and 20 s at 15 FPS. Twelve unifo
 \begin{table}[htbp]\centering\caption{Measured results from the final Jetson video}
 \begin{tabular}{ll}\toprule \textbf{Test item} & \textbf{Measured result}\\\midrule
 Video specification & 1280$\times$720, 300 frames\\
-Duration and frame rate & 20 s, 15 FPS\\
+Duration and frame rate & 20.0 s; nominal 15 FPS, observed overlay 14.8--15.0 FPS\\
 Representative inference time & 28.8 ms\\
 Representative image-processing time & 6.0 ms\\
 Detected classes & Keyboard, Mouse, Cup\\
-Real-time requirement & 15 FPS $>$ 5 FPS; requirement satisfied\\\bottomrule
+Real-time requirement & Lowest inspected overlay 14.8 FPS $>$ 5 FPS\\\bottomrule
 \end{tabular}\end{table}
 
 \subsection{ROS2 interface and offline verification}
@@ -248,7 +248,9 @@ For the required 20-object acceptance test, at least 20 physical instances shoul
 System-level evaluation should additionally report average and minimum FPS, preprocessing, inference, and postprocessing latency, message publication frequency, dropped frames, and continuous-run stability. These measures distinguish model accuracy from the behavior of the complete camera-to-message pipeline.
 
 \section{Error Analysis and Improvements}
-A low-confidence Mouse candidate with confidence 0.26 appears near the left border of one recorded frame. The result illustrates the precision-recall trade-off: a low threshold preserves difficult targets but may accept background structures. Adding desk edges, chassis edges, cables, and dark elongated objects as negative samples can reduce this error.
+The video contains short, credible failure cases rather than perfectly stable detections. Around the 7 s region, the overlay reports four objects although the scene principally contains one keyboard, one mouse, and one cup; an additional Keyboard box with confidence 0.43 extends over the right-hand desk/hand region. Around 15 s, a hand-held black mouse is assigned a low-confidence Mouse detection of 0.32, but the box expands over much of the hand and arm. These observations show that the model is sensitive to occlusion, hand--object interaction, and elongated high-contrast background structures. They are qualitative video observations, not a counted error rate.
+
+A practical correction strategy is to add empty desk regions, hands, forearms, monitor bases, cables, and partial keyboard edges as hard negatives, while adding manually reviewed hand-held Mouse examples as hard positives. Confidence-threshold tuning alone would suppress the 0.43 false Keyboard box but could also remove the valid 0.32 occluded Mouse detection. The preferred remedy is therefore targeted hard-case retraining followed by evaluation on the unchanged test set.
 
 Domain shift also exists between training images and Jetson video because of focal length, exposure, motion blur, and viewpoint. Cup is especially vulnerable under reflections, low light, and background-color similarity. Error frames should be categorized as low light, occlusion, small object, clutter, or motion blur, manually reviewed, and added to the next training round. A controlled ablation can then compare the baseline, augmentation, negative samples, and hard-case feedback while keeping the split and training settings fixed.
 
@@ -290,7 +292,7 @@ The 45 Cup augmentations increase training exposure but are correlated derivativ
 \end{figure}
 
 \section{Conclusion}
-This experiment completed an end-to-end desktop object detector from multi-source dataset construction to real-time Jetson execution. The integrated dataset contains approximately 650 source images, including self-collected positives, supplementary online samples, and negative backgrounds. The audited core contains 225 source images and 687 positive boxes, and quality control prevented 15 orphan labels from entering training. A further 45 training-only augmented samples increased the training representation to 935 boxes, including 116 Cup instances. YOLOv8n achieved precision 0.806, recall 0.894, mAP@0.5 0.888, and mAP@0.5:0.95 0.814. The final video demonstrates real-time detection of Keyboard, Mouse, and Cup at a stable displayed rate of 15 FPS, satisfying the course requirement.
+This experiment completed an end-to-end desktop object detector from multi-source dataset construction to real-time Jetson execution. The integrated dataset contains approximately 650 source images, including self-collected positives, supplementary online samples, and negative backgrounds. The audited core contains 225 source images and 687 positive boxes, and quality control prevented 15 orphan labels from entering training. A further 45 training-only augmented samples increased the training representation to 935 boxes, including 116 Cup instances. YOLOv8n achieved precision 0.806, recall 0.894, mAP@0.5 0.888, and mAP@0.5:0.95 0.814. The 20 s video includes detections of Keyboard, Mouse, and Cup and shows approximately 14.8--15.0 FPS in inspected frames, satisfying the 5 FPS requirement. It also preserves transient failure cases that motivate hard-negative and occlusion-focused refinement.
 
 The work shows that a complete object-detection experiment requires dataset quality control, independent evaluation, hardware deployment, latency measurement, reproducible archiving, and error feedback. Future work should collect additional independent Cup scenes, continue expanding hard negative samples, and complete live ROS2 topic verification on Jetson.
 

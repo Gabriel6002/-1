@@ -22,7 +22,7 @@ def build_capture(args):
         pipeline = (
             f"nvarguscamerasrc sensor-id={args.device} ! "
             f"video/x-raw(memory:NVMM), width=(int){args.width}, "
-            f"height=(int){args.height}, framerate=(fraction)30/1 ! "
+            f"height=(int){args.height}, framerate=(fraction){args.fps}/1 ! "
             f"nvvidconv flip-method={args.flip} ! video/x-raw, format=(string)BGRx ! "
             f"videoconvert ! video/x-raw, format=(string)BGR ! appsink drop=true max-buffers=1"
         )
@@ -131,6 +131,8 @@ def main():
     csv_path = os.path.join(out_dir, "detections.csv")
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     writer = cv2.VideoWriter(video_path, fourcc, args.fps, (args.width, args.height))
+    if not writer.isOpened():
+        raise SystemExit(f"Cannot create output video: {video_path}")
     ros = RosPublisher(not args.no_ros, args.topic)
 
     frame_id = 0
@@ -154,6 +156,9 @@ def main():
                 if not ok:
                     print("Camera read failed")
                     break
+                if frame.shape[1] != args.width or frame.shape[0] != args.height:
+                    frame = cv2.resize(frame, (args.width, args.height),
+                                       interpolation=cv2.INTER_AREA)
 
                 frame_id += 1
                 now = time.time()

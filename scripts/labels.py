@@ -2,15 +2,14 @@ import argparse
 import os
 from collections import Counter
 
-import cv2
-
 IMG_EXT = ['.jpg', '.jpeg', '.png', '.bmp']
 PALETTE = [(56, 56, 255), (31, 112, 255), (49, 210, 207), (10, 249, 72),
            (134, 219, 61), (255, 194, 0), (168, 153, 44), (23, 204, 146)]
 
 
 def load_yaml(path):
-    root, names = os.path.dirname(os.path.abspath(path)), {}
+    yaml_dir = os.path.dirname(os.path.abspath(path))
+    root, names = yaml_dir, {}
     splits, in_names = {}, False
     with open(path, encoding='utf-8') as f:
         for line in f:
@@ -28,7 +27,7 @@ def load_yaml(path):
             k, _, v = raw.partition(':')
             k, v = k.strip(), v.strip()
             if k == 'path':
-                root = v
+                root = v if os.path.isabs(v) else os.path.normpath(os.path.join(yaml_dir, v))
             elif k in ('train', 'val', 'test'):
                 splits[k] = v
     return root, splits, names
@@ -96,6 +95,7 @@ def check_split(root, rel, names, problems, hist, samples):
 
 
 def visualize(samples, names, n):
+    import cv2
     import random
     random.shuffle(samples)
     print(f'\n抽样可视化 {min(n, len(samples))} 张，按任意键下一张，q 退出')

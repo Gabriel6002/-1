@@ -2,6 +2,7 @@
 """Readable ROS2 console subscriber for the detector JSON topic."""
 
 import json
+import argparse
 
 import rclpy
 from rclpy.node import Node
@@ -9,9 +10,9 @@ from std_msgs.msg import String
 
 
 class DetectionConsole(Node):
-    def __init__(self):
+    def __init__(self, topic):
         super().__init__('desk_detection_console')
-        self.create_subscription(String, '/desk_object_detections', self.show, 10)
+        self.create_subscription(String, topic, self.show, 10)
 
     def show(self, message):
         packet = json.loads(message.data)
@@ -23,8 +24,11 @@ class DetectionConsole(Node):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--topic', default='/desk_object_detections')
+    args = ap.parse_args()
     rclpy.init()
-    node = DetectionConsole()
+    node = DetectionConsole(args.topic)
     try:
         rclpy.spin(node)
     finally:

@@ -17,6 +17,8 @@ def main():
 
     made = 0
     for label in sorted(args.labels.glob('*.txt')):
+        if label.name.startswith(args.prefix):
+            continue
         rows = [line.split() for line in label.read_text().splitlines() if line.strip()]
         if not any(int(row[0]) == args.cup_id for row in rows):
             continue
@@ -30,6 +32,8 @@ def main():
         frame = cv2.convertScaleAbs(cv2.flip(frame, 1), alpha=1.04, beta=3)
         out_image = args.images / f'{args.prefix}{image.name}'
         out_label = args.labels / f'{args.prefix}{label.name}'
+        if out_image.exists() and out_label.exists():
+            continue
         cv2.imwrite(str(out_image), frame)
         transformed = []
         for cls_id, x, y, w, h in rows:

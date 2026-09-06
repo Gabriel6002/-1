@@ -1,6 +1,7 @@
 import argparse
 import os
 import random
+import re
 import shutil
 from collections import Counter
 
@@ -49,6 +50,31 @@ def class_histogram(pairs):
     return hist
 
 
+def capture_group(pair, span):
+    """Keep short bursts together so adjacent frames cannot leak across splits."""
+    stem = os.path.splitext(os.path.basename(pair[0]))[0]
+    found = list(re.finditer(r'\d+', stem))
+    if not found:
+        return stem
+    last = found[-1]
+    block = int(last.group()) // span
+    return f'{stem[:last.start()]}{block:06d}'
+
+
+def grouped_split(pairs, ratios, seed, span):
+    groups = {}
+    for pair in pairs:
+        groups.setdefault(capture_group(pair, span), []).append(pair)
+    chunks = list(groups.values())
+    random.Random(seed).shuffle(chunks)
+    target = [len(pairs) * r for r in ratios]
+    result = [[], [], []]
+    for chunk in sorted(chunks, key=len, reverse=True):
+        idx = max(range(3), key=lambda i: target[i] - len(result[i]))
+        result[idx].extend(chunk)
+    return result
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--input', required=True, help='已标注数据目录')
@@ -57,6 +83,8 @@ def main():
     ap.add_argument('--ratio', nargs=3, type=float, default=[0.7, 0.2, 0.1],
                     metavar=('TRAIN', 'VAL', 'TEST'))
     ap.add_argument('--seed', type=int, default=42)
+    ap.add_argument('--group-span', type=int, default=10,
+                    help='连续编号每多少张视为同一拍摄组，默认 10')
     ap.add_argument('--move', action='store_true', help='移动而不是复制文件')
     args = ap.parse_args()
 
@@ -86,15 +114,11 @@ def main():
     if bad:
         raise SystemExit(f'标注中出现越界类别 id {bad}，请检查 --classes 顺序或标注文件')
 
-    random.seed(args.seed)
-    random.shuffle(pairs)
-    n = len(pairs)
-    n_train = int(n * args.ratio[0])
-    n_val = int(n * args.ratio[1])
+    grouped = grouped_split(pairs, args.ratio, args.seed, args.group_span)
     splits = {
-        'train': pairs[:n_train],
-        'val': pairs[n_train:n_train + n_val],
-        'test': pairs[n_train + n_val:],
+        'train': grouped[0],
+        'val': grouped[1],
+        'test': grouped[2],
     }
 
     op = shutil.move if args.move else shutil.copy2

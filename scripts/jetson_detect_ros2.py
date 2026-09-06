@@ -71,8 +71,9 @@ class RosPublisher:
         self.rclpy.shutdown()
 
 
-def draw_detections(frame, detections, fps):
-    palette = [(56, 56, 255), (49, 210, 207), (134, 219, 61), (255, 194, 0)]
+def draw_detections(frame, detections, fps, cap_ms, infer_ms, clipped, sharpness):
+    # BGR colors follow the recorded demo: Mouse blue, Keyboard orange, Cup green.
+    palette = [(255, 125, 20), (0, 165, 255), (0, 230, 40)]
     for det in detections:
         x1, y1, x2, y2 = det["xyxy"]
         cls_id = det["class_id"]
@@ -85,10 +86,19 @@ def draw_detections(frame, detections, fps):
         cv2.putText(frame, label, (x1 + 4, y0 + th + 2),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-    hud = f"FPS {fps:.1f} | q quit | e save error"
-    cv2.rectangle(frame, (0, 0), (frame.shape[1], 32), (0, 0, 0), -1)
-    cv2.putText(frame, hud, (8, 23), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
-                (0, 255, 0), 2)
+    line1 = f"FPS: {fps:.1f}  objs: {len(detections)}"
+    line2 = f"cap: {cap_ms:.1f}ms  infer: {infer_ms:.1f}ms  clip: {clipped:.1f}%  sharp: {sharpness:.0f}"
+    cv2.putText(frame, line1, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.82,
+                (0, 255, 0), 2, cv2.LINE_AA)
+    cv2.putText(frame, line2, (10, 57), cv2.FONT_HERSHEY_SIMPLEX, 0.58,
+                (0, 255, 0), 2, cv2.LINE_AA)
+
+
+def frame_quality(frame):
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    clipped = 100.0 * float(((gray <= 2) | (gray >= 253)).mean())
+    sharpness = float(cv2.Laplacian(gray, cv2.CV_64F).var())
+    return clipped, sharpness
 
 
 def main():
@@ -99,7 +109,7 @@ def main():
     parser.add_argument("--flip", type=int, default=0)
     parser.add_argument("--width", type=int, default=1280)
     parser.add_argument("--height", type=int, default=720)
-    parser.add_argument("--fps", type=int, default=30)
+    parser.add_argument("--fps", type=int, default=15)
     parser.add_argument("--imgsz", type=int, default=640)
     parser.add_argument("--conf", type=float, default=0.25)
     parser.add_argument("--topic", default="/desk_object_detections")
@@ -133,11 +143,14 @@ def main():
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         log = csv.writer(f)
         log.writerow(["frame", "time", "class_id", "class_name", "confidence",
-                      "x1", "y1", "x2", "y2", "fps"])
+                      "x1", "y1", "x2", "y2", "fps", "capture_ms", "inference_ms",
+                      "clipped_percent", "sharpness"])
 
         try:
             while True:
+                capture_started = time.perf_counter()
                 ok, frame = cap.read()
+                cap_ms = (time.perf_counter() - capture_started) * 1000.0
                 if not ok:
                     print("Camera read failed")
                     break
@@ -147,8 +160,11 @@ def main():
                 fps = 0.9 * fps + 0.1 * (1.0 / max(now - last, 1e-6)) if fps else 0.0
                 last = now
 
+                infer_started = time.perf_counter()
                 result = model.predict(frame, imgsz=args.imgsz, conf=args.conf,
                                        device=0, verbose=False)[0]
+                infer_ms = (time.perf_counter() - infer_started) * 1000.0
+                clipped, sharpness = frame_quality(frame)
                 detections = []
                 for box in result.boxes:
                     cls_id = int(box.cls[0].item())
@@ -160,10 +176,14 @@ def main():
                         "class_name": name,
                         "confidence": conf,
                         "xyxy": xyxy,
+                        "center": [round((xyxy[0] + xyxy[2]) / 2.0, 1),
+                                   round((xyxy[1] + xyxy[3]) / 2.0, 1)],
+                        "size": [xyxy[2] - xyxy[0], xyxy[3] - xyxy[1]],
                     }
                     detections.append(det)
                     log.writerow([frame_id, f"{now:.3f}", cls_id, name, f"{conf:.4f}",
-                                  *xyxy, f"{fps:.2f}"])
+                                  *xyxy, f"{fps:.2f}", f"{cap_ms:.2f}", f"{infer_ms:.2f}",
+                                  f"{clipped:.3f}", f"{sharpness:.1f}"])
 
                 payload = {
                     "frame": frame_id,
@@ -173,7 +193,8 @@ def main():
                 }
                 ros.publish(payload)
 
-                draw_detections(frame, detections, fps)
+                draw_detections(frame, detections, fps, cap_ms, infer_ms,
+                                clipped, sharpness)
                 writer.write(frame)
                 cv2.imshow("desk object detection", frame)
                 key = cv2.waitKey(1) & 0xFF

@@ -56,7 +56,8 @@ def check_split(root, rel, names, problems, hist, samples):
         stem = os.path.splitext(fn)[0]
         lbl = os.path.join(lbl_dir, stem + '.txt')
         if not os.path.exists(lbl):
-            problems.append(f'[缺标注] {rel}/{fn}')
+            # YOLO permits an image without objects; no txt file is a valid negative sample.
+            samples.append((os.path.join(img_dir, fn), []))
             continue
 
         boxes, seen = [], set()
@@ -87,8 +88,7 @@ def check_split(root, rel, names, problems, hist, samples):
                 hist[cid] += 1
                 boxes.append((cid, x, y, w, h))
 
-        if not boxes:
-            problems.append(f'[空标注] {stem}.txt 没有任何框')
+        # An existing empty txt file is also accepted as an explicit negative sample.
         img_path = find_image(img_dir, stem)
         if img_path:
             samples.append((img_path, boxes))

@@ -26,7 +26,11 @@ cup
 │   ├── dataset.py            数据集划分脚本
 │   ├── labels.py             标注检查脚本
 │   ├── common.py             设备与精度参数工具
-│   └── jetson_detect_ros2.py Jetson 实时检测与 ROS2 发布脚本
+│   ├── jetson_detect_ros2.py Jetson 实时检测与 ROS2 发布脚本
+│   ├── make_seed_labels.py   生成待人工复核的预标注
+│   ├── cup_flip.py           Cup 训练集定向增强与坐标同步变换
+│   ├── train_on_mac.py       Apple Silicon/MPS 训练入口
+│   └── listen_detections.py  ROS2 终端订阅与可读结果输出
 ├── data/                       YOLO 配置与 train/val/test 标签
 ├── models/best.pt              最优训练权重
 ├── results/training/           曲线、混淆矩阵、验证预测与训练日志
@@ -64,10 +68,22 @@ python scripts/dataset.py --input labeled --output yolo_dataset \
 python scripts/labels.py --data data/data.yaml --show 20
 ```
 
+自动预标注（输出只是候选标签，必须人工复核）：
+
+```bash
+python scripts/make_seed_labels.py raw review_labels --model yolov8x.pt
+```
+
+Cup 训练集增强：
+
+```bash
+python scripts/cup_flip.py yolo_dataset/images/train yolo_dataset/labels/train
+```
+
 训练模型：
 
 ```bash
-yolo detect train data=data/data.yaml model=yolov8n.pt epochs=100 imgsz=640
+python scripts/train_on_mac.py --data data/data.yaml
 ```
 
 Jetson 运行：
@@ -75,7 +91,8 @@ Jetson 运行：
 ```bash
 cd /home/nvidia/HYJJJ
 source /opt/ros/humble/setup.bash
-python3 scripts/jetson_detect_ros2.py --model models/best.pt --device 0
+python3 scripts/jetson_detect_ros2.py --model models/best.pt \
+    --device 0 --width 1280 --height 720 --fps 15
 ```
 
 查看 ROS2 结果：
@@ -83,6 +100,30 @@ python3 scripts/jetson_detect_ros2.py --model models/best.pt --device 0
 ```bash
 ros2 topic echo /desk_object_detections
 ```
+
+也可以使用仓库中的可读订阅端，它会输出类别、置信度、边界框、中心点和宽高：
+
+```bash
+python3 scripts/listen_detections.py
+```
+
+运行画面左上角会显示与最终视频一致的 `FPS`、`objs`、采集耗时、推理耗时、
+过曝/欠曝像素比例 `clip` 和拉普拉斯清晰度 `sharp`。程序同时保存 MP4、逐框 CSV
+以及按 `e` 键保留的典型错误帧。
+
+## 数据放置说明
+
+GitHub 只保存轻量标签，不保存原始图片。复现实验时，请把对应图片放到：
+
+```text
+data/images/train/
+data/images/val/
+data/images/test/
+```
+
+文件名必须与 `data/labels/` 中的 txt 主文件名一致。负样本可以没有 txt，或使用空 txt。
+`dataset.py` 默认按连续 10 个编号组成拍摄组再划分，避免相邻帧同时进入训练集与测试集；
+可通过 `--group-span` 调整分组跨度。
 
 ## 提交材料
 

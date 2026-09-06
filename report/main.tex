@@ -26,30 +26,25 @@
 \begin{document}
 \begin{titlepage}\thispagestyle{empty}
 \begin{tikzpicture}[remember picture,overlay]
- \fill[Navy] (current page.north west) rectangle ([xshift=1.65cm]current page.south west);
- \fill[PaleBlue] ([xshift=1.65cm]current page.north west) rectangle (current page.south east);
- \fill[white] ([xshift=1.9cm,yshift=-1.4cm]current page.north west) rectangle ([xshift=-1.15cm,yshift=1.25cm]current page.south east);
- % Abstract computer-vision motif: target frames, feature nodes, and signal paths.
- \draw[Blue!22,line width=17pt,rounded corners=18pt] ([xshift=10.6cm,yshift=-3.0cm]current page.north west) rectangle ([xshift=-2.0cm,yshift=-10.2cm]current page.north east);
- \draw[Navy!75,line width=2.2pt,rounded corners=8pt] ([xshift=11.2cm,yshift=-3.65cm]current page.north west) rectangle ([xshift=15.0cm,yshift=-7.0cm]current page.north west);
- \draw[Blue,line width=1.5pt,rounded corners=5pt] ([xshift=12.0cm,yshift=-5.0cm]current page.north west) rectangle ([xshift=14.1cm,yshift=-6.45cm]current page.north west);
- \draw[Blue!65,line width=1pt] ([xshift=10.9cm,yshift=-8.25cm]current page.north west)--([xshift=12.4cm,yshift=-9.45cm]current page.north west)--([xshift=14.0cm,yshift=-8.55cm]current page.north west)--([xshift=15.2cm,yshift=-9.6cm]current page.north west);
- \foreach \x/\y in {10.9/-8.25,12.4/-9.45,14.0/-8.55,15.2/-9.6}{\fill[Blue] ([xshift=\x cm,yshift=\y cm]current page.north west) circle (3.2pt);\draw[Blue!35] ([xshift=\x cm,yshift=\y cm]current page.north west) circle (7pt);}
- \fill[Blue!7] ([xshift=10.5cm,yshift=-17.0cm]current page.north west) rectangle ([xshift=15.9cm,yshift=-22.4cm]current page.north west);
- \draw[Blue!28,line width=1.1pt] ([xshift=11.1cm,yshift=-17.65cm]current page.north west) rectangle ([xshift=14.2cm,yshift=-20.1cm]current page.north west);
- \draw[Navy!35,line width=1.1pt] ([xshift=12.25cm,yshift=-18.75cm]current page.north west) rectangle ([xshift=15.25cm,yshift=-21.25cm]current page.north west);
- \foreach \x in {10.9,11.55,12.2,12.85,13.5,14.15,14.8,15.45}{\fill[Blue!38] ([xshift=\x cm,yshift=-23.0cm]current page.north west) circle (1.5pt);}
- \draw[Blue,line width=2pt] ([xshift=3.0cm,yshift=-4.25cm]current page.north west)--([xshift=6.2cm,yshift=-4.25cm]current page.north west);
- \draw[LightRule,line width=0.8pt] ([xshift=6.4cm,yshift=-4.25cm]current page.north west)--([xshift=-2.0cm,yshift=-4.25cm]current page.north east);
- \node[anchor=west,text=Blue,font=\sffamily\bfseries\fontsize{44}{48}\selectfont] at ([xshift=3.0cm,yshift=-6.0cm]current page.north west){EXPERIMENT 1};
- \node[anchor=west,text=Navy,font=\sffamily\bfseries\fontsize{27}{33}\selectfont] at ([xshift=3.0cm,yshift=-7.45cm]current page.north west){Object Detection};
- \node[anchor=west,text=Navy,font=\sffamily\bfseries\fontsize{27}{33}\selectfont] at ([xshift=3.0cm,yshift=-8.45cm]current page.north west){and Recognition};
- \fill[Blue] ([xshift=3.0cm,yshift=-10.0cm]current page.north west) circle (3pt);
- \draw[Blue!55,line width=1pt] ([xshift=3.25cm,yshift=-10.0cm]current page.north west)--([xshift=8.4cm,yshift=-10.0cm]current page.north west);
- \node[anchor=west,text=Blue,font=\sffamily\bfseries\Large] at ([xshift=3.0cm,yshift=-12.0cm]current page.north west){GROUP 11};
- \node[anchor=west,text=Navy,font=\sffamily\bfseries\LARGE] at ([xshift=3.0cm,yshift=-13.15cm]current page.north west){Hua Yingjie};
- \node[anchor=west,text=Slate,font=\sffamily\large] at ([xshift=3.0cm,yshift=-14.05cm]current page.north west){Student ID \quad 24020036025};
- \node[anchor=south east,text=Navy,font=\sffamily\bfseries\small,align=right] at ([xshift=-2.0cm,yshift=2.0cm]current page.south east){OCEAN UNIVERSITY OF CHINA};
+ \fill[white] (current page.south west) rectangle (current page.north east);
+ \fill[Navy] (current page.north west)--(current page.north east)--([yshift=-11.7cm]current page.north east)--([yshift=-13.0cm]current page.north west)--cycle;
+ \fill[Blue] ([yshift=-12.75cm]current page.north west)--([yshift=-11.55cm]current page.north east)--([yshift=-12.05cm]current page.north east)--([yshift=-13.25cm]current page.north west)--cycle;
+ \draw[white,opacity=.10,line width=22pt] ([xshift=-1.0cm,yshift=-3.2cm]current page.north east) circle (3.0cm);
+ \draw[white,opacity=.16,line width=1.4pt] ([xshift=-1.0cm,yshift=-3.2cm]current page.north east) circle (1.75cm);
+ \draw[white,opacity=.16,line width=1.1pt,rounded corners=7pt] ([xshift=-4.0cm,yshift=-1.65cm]current page.north east) rectangle ([xshift=-0.8cm,yshift=-4.6cm]current page.north east);
+ \foreach \a in {0,45,...,315}{\fill[white,opacity=.32] ([xshift=-1.0cm,yshift=-3.2cm]current page.north east) ++(\a:1.75cm) circle (1.4pt);}
+ \node[anchor=west,text=white,font=\sffamily\bfseries\fontsize{19}{23}\selectfont] at ([xshift=2.55cm,yshift=-3.25cm]current page.north west){EXPERIMENT 1};
+ \draw[white,opacity=.72,line width=1.5pt] ([xshift=2.55cm,yshift=-3.75cm]current page.north west)--([xshift=5.25cm,yshift=-3.75cm]current page.north west);
+ \node[anchor=west,text=white,align=left,font=\sffamily\bfseries\fontsize{31}{37}\selectfont] at ([xshift=2.55cm,yshift=-6.0cm]current page.north west){Object Detection\\and Recognition};
+ \fill[PaleBlue,rounded corners=5pt] ([xshift=2.55cm,yshift=-16.0cm]current page.north west) rectangle ([xshift=11.0cm,yshift=-20.8cm]current page.north west);
+ \fill[Blue] ([xshift=2.55cm,yshift=-16.0cm]current page.north west) rectangle ([xshift=2.68cm,yshift=-20.8cm]current page.north west);
+ \node[anchor=west,text=Blue,font=\sffamily\bfseries\large] at ([xshift=3.1cm,yshift=-17.05cm]current page.north west){GROUP 11};
+ \node[anchor=west,text=Navy,font=\sffamily\bfseries\LARGE] at ([xshift=3.1cm,yshift=-18.35cm]current page.north west){Hua Yingjie};
+ \node[anchor=west,text=Slate,font=\sffamily\large] at ([xshift=3.1cm,yshift=-19.48cm]current page.north west){Student ID \quad 24020036025};
+ \foreach \x/\y in {13.1/-17.0,14.0/-17.0,14.9/-17.0,15.8/-17.0,13.1/-17.9,14.0/-17.9,14.9/-17.9,15.8/-17.9,13.1/-18.8,14.0/-18.8,14.9/-18.8,15.8/-18.8}{\fill[Blue!35] ([xshift=\x cm,yshift=\y cm]current page.north west) circle (1.7pt);}
+ \draw[Blue!28,line width=1.1pt,rounded corners=4pt] ([xshift=13.55cm,yshift=-19.25cm]current page.north west) rectangle ([xshift=16.25cm,yshift=-21.25cm]current page.north west);
+ \draw[Navy!28,line width=1.1pt,rounded corners=4pt] ([xshift=14.25cm,yshift=-20.0cm]current page.north west) rectangle ([xshift=17.0cm,yshift=-22.0cm]current page.north west);
+ \node[anchor=south east,text=Navy,font=\sffamily\bfseries\small,align=right] at ([xshift=-2.0cm,yshift=1.65cm]current page.south east){OCEAN UNIVERSITY OF CHINA};
 \end{tikzpicture}\mbox{}
 \end{titlepage}
 
@@ -151,6 +146,9 @@ Cup remains the least frequent class even after increasing its representation to
 
 \subsection{Near-duplicate control and data leakage prevention}
 Desktop images are frequently captured in bursts or extracted from video, so adjacent frames can be almost identical in background, illumination, and object position. A purely random image-level split may place such frames in both training and test sets and produce overly optimistic metrics. Samples were therefore grouped by capture batch, video segment, and consecutive filename range before splitting. The augmented Cup samples inherit the training-only status of their sources. Perceptual hashing can be added as a second screening step, and the test set must remain untouched while augmentation parameters and confidence thresholds are selected.
+
+\subsection{Annotation governance and data provenance}
+Each image should be traceable to a source category, capture batch, review state, split membership, and annotation revision. A compact manifest can record these fields together with a file hash, enabling duplicate detection and preventing an online image, augmented derivative, or corrected label from silently changing partitions. Online material must also retain its source URL and license status outside the public dataset archive. This governance separates original evidence from derived training data and makes later corrections auditable without committing large image files to GitHub.
 
 \section{YOLOv8 Model Training}
 YOLOv8n was selected as the edge baseline because of its small parameter count and low latency. Training started from general pretrained weights with an input size of $640\times640$, batch size 8, and 100 epochs on MPS. The objective combines box regression, classification, and distribution focal loss:
@@ -269,6 +267,23 @@ The deployment domain differs from still training images in focal length, exposu
 
 \section{Project Archive and Reproducibility}
 Code, dataset configuration, audited labels, the trained model, training results, and the report are organized in the personal repository \href{https://github.com/Gabriel6002/-1}{Gabriel6002/-1}. Large image collections and the final video are intentionally excluded from GitHub. The repository uses one clear location for each artifact category: \texttt{scripts/}, \texttt{data/}, \texttt{models/}, \texttt{results/}, \texttt{report/}, and \texttt{docs/}.
+
+For deployment repeatability, the model file, class order, input resolution, confidence threshold, software versions, and Git revision should be logged together. Timing measurements should include a warm-up period and distinguish pure model inference from camera decoding, preprocessing, drawing, ROS2 serialization, and video writing. Recording mean, minimum, and percentile latency avoids presenting a single favorable frame as system performance.
+
+\begin{table}[htbp]\centering\caption{Reproducibility checklist and evidence boundary}\label{tab:repro}
+{\renewcommand{\arraystretch}{1.18}\begin{tabular}{p{4.4cm}p{5.1cm}p{4.0cm}}\toprule
+\textbf{Artifact or check} & \textbf{Repository evidence} & \textbf{Status}\\\midrule
+Training and dataset code & \texttt{scripts/}, \texttt{data/data.yaml} & Archived and syntax-checked\\
+Audited annotations & \texttt{data/labels/} & 270 files, 935 valid boxes\\
+Trained detector & \texttt{models/best.pt} & Archived, non-empty file\\
+Learning evidence & \texttt{results/training/} & Metrics and plots archived\\
+Jetson demonstration & Video retained outside GitHub & 15 FPS display observed\\
+ROS2 payload & Publisher code and offline JSON check & Live topic echo not claimed\\
+Raw images and video & Excluded by repository policy & Kept outside public Git history\\\bottomrule
+\end{tabular}}\end{table}
+
+\subsection{Validity boundaries}
+The 45 Cup augmentations increase training exposure but are correlated derivatives, not independent test evidence; consequently, they are excluded from validation and testing. The approximately 650-image integrated pool combines self-collected, online, and negative material, whereas the 225-image core is the subset with complete audited image--label correspondence. Domain shift can remain between online imagery and the Jetson camera. Finally, the ROS2 message structure has been validated offline, but a live Jetson \texttt{ros2 topic echo} result is not presented. These boundaries distinguish measured results from engineering proposals.
 
 \begin{figure}[htbp]\centering\includegraphics[width=0.92\textwidth]{figures/github-commit-history.png}
 \caption{Incremental Git commit history generated from the local repository log}\label{fig:git}
